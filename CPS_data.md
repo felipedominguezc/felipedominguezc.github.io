@@ -1,6 +1,7 @@
 CPS Data with p-Weight Aggregation for LFPR Analysis
 
 ```stata
+
 /***************************************************************************************************************
 
 Author: Felipe Dominguez Cornejo
@@ -19,14 +20,17 @@ Author: Felipe Dominguez Cornejo
 ****************************************************************************************
 
 **#Calculate LFPR by group with weights (Variables to be used for every question)
+
 	gen adult_w = (popstat == 1) * wtfinl //adult_civilian indicator weighted
 	gen in_lab_w = (labforce == 2) * wtfinl //adult civilian in labor force indicator weighted
 
-****************************************************************************************
+
 
 
 ***************************************************************************************************
+
 **# 1 LFPR by age Profile in 1999 & 2024
+
 ***************************************************************************************************
 
 *Create Age groups:
@@ -44,7 +48,7 @@ Author: Felipe Dominguez Cornejo
 
 
 
-* Overall LFPR by year and age_group
+*Overall LFPR by year and age_group
 
 	local age_groups 1 2 3 4 5 6 7
 
@@ -63,7 +67,7 @@ Author: Felipe Dominguez Cornejo
 	label variable overall_lfpr6 "Overall LFPR for Ages 55-64"
 	label variable overall_lfpr7 "Overall LFPR for Ages 65+"
 
-* LFPR for each age_group by year, age_group, and sex
+*LFPR for each age_group by year, age_group, and sex
 
 	foreach age in `age_groups' {
 	    by year age_group sex, sort: egen adult_civilian`age' = total(((popstat == 1) & (age_group == `age')) * wtfinl)
