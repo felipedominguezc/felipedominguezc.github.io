@@ -3,6 +3,7 @@ Cross-Sectional Survey Data Analysis with Weights
 ```stata
 
 set more 1
+
 /******************************************************************************************************************************************* 
 
 AEI Economic Policy Studies
@@ -67,6 +68,7 @@ Author: Felipe Dominguez Cornejo
 	
 
 **#4 Calculate proportions by subpopulations using diabetes_final
+
 ***************************************************************************************************************************
 
 	levelsof year, local(years)
@@ -103,7 +105,8 @@ Author: Felipe Dominguez Cornejo
 	preserve
 	use "`prev_data'", clear
 
-	*Graph
+
+*Graph
 
 *********************************************************************************************************************************************
 
