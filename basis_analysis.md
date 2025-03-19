@@ -6,7 +6,7 @@ Administrative Data
 
 Author: Felipe Dominguez Cornejo
 This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for
-disabled students at the LSe
+disabled students at the LSE
 
 *****************************************************************************************************************/
 
