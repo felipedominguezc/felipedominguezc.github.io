@@ -2,6 +2,8 @@
 
 
 ```stata
+
+
 *******************************************************
 * FILE:           Hurricanes_Music_Study.do
 * AUTHOR:         FDC
@@ -13,10 +15,13 @@
 *******************************************************
 
 ********** SECTION 1: SETUP **********
+
 cd "/Users/felipedominguez/Desktop/Abroad docs/Research_Assistant/Hurricanes & music "
 use MH_raw.dta, clear
 
+
 ********** SECTION 2: DESCRIBE & SPLIT STRING VARIABLES **********
+
 /* Split and destring emotionlist, planhome, itemsshelter, itemskit into numeric indicators */
 split emotionlist, generate(emotionlist) parse(,) destring
 split planhome, generate(p_home) parse(,) destring 
@@ -24,6 +29,7 @@ split itemsshelter, generate(ishelter) parse(,) destring
 split itemskit, generate(ikit) parse(,) destring 
 
 ********** SECTION 3: CREATE DUMMY VARIABLES FOR CATEGORICAL RESPONSES **********
+
 /* Generate binary indicators for emotion categories */
 gen emolist1 =0 
 replace emolist1 = 1 if emotionlist1 == 1   /*dummy variable*/
@@ -138,6 +144,7 @@ replace itemskit6 = . if itemskit ==""
 drop ikit* 
 
 ********** SECTION 4: OPEN-ENDED EMOTION CODING **********
+
 /* Generate binary emotion variables from open-ended responses */
 gen eo_fear = 0 
 replace eo_fear =1 if upper(eo_oneword)== "AFRAID" |  upper(eo_oneword)=="SCARED" | upper(eo_oneword)=="FRIGHTENED" | upper(eo_oneword)=="NERVOUS" |upper(eo_oneword)=="JITTERY" | upper(eo_oneword)=="SHAKY"  
@@ -193,6 +200,7 @@ replace eo_other = . if eo_oneword =="" & eo_oneword2 ==""
 
 
 ********** SECTION 5: AGGREGATE EMOTION SCALES **********
+
 /* Create composite positive, negative, other emotion scales */
 gen eopen_positive =0 
 replace eopen_positive =1 if eo_joviality==1 | eo_selfassurance==1 |  eo_attentiveness ==1 | eo_otherpos ==1 
@@ -219,6 +227,7 @@ replace info_seeking =2 if share ==1 & reminder ==1
 
 
 ********** SECTION 6: DESCRIPTIVE ANALYSES **********
+
 /* Frequencies, chi-square tests, t-tests, Kruskal-Wallis */
 tab treatment makeplan , chi2  /*treatment (for control) vs outcome1: makeplan*/
 tab treatment intention , chi2  /*treatment (for control) vs outcome2: intention*/
@@ -256,6 +265,7 @@ kwallis gender, by(treatment)
 
 	
 ********** SECTION 7: VARIABLE LABELING & CLEANUP **********
+
 label define treatment 0 "Control" 1 "Directive" 2 "Music"
 label values treatment treatment
 /*Rename emotionlist variables*/
