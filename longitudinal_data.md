@@ -1,290 +1,458 @@
 Experimental Data Management
 
 ```stata
-/*
-Author: FDC
-Data Task 
 
-*******************************************************************************/
+	set more 1
+	capture log close
+
+/******************************************************************************************************************************************
+Author: Felipe Dominguez Cornejo
+U Chicago Booth School of Business
+Data Task for RA position with Professors Pope & Dean
+
+*********************************************************************************************************************************************/
+
+	log using "/Users/felipedominguez/Desktop/Jobs & Apps/U Chicago/Profs. Dean & Pope/Data task/Stata Files/FDC_data_task.txt", replace
+
+	/******************************************************************************************************
+	Why did I write this code?
+		This is my coed for the data task for an RA position with Professor Dean and Professor Pope at 
+		Chicago Booth. They focus on behavioral economics.
+	
+	Table of Contents:
+		Each question has its own section in the code. I use preserve/restore commdands instead of 
+		saving new .dta files
+	
+	Inputs/Outputs:
+		This code reads in the two .csv files, converts them into .dta files (which are used throughout). 
+		Outputs include graphs and tables needed to answer the questions
+	
+	Technical information/general assumptions:
+		Test scores are correct and free of errors-in-variables
+		Q1: I chose to use only the primary respondent because it provides a clear one-to-one comparison of guardian characteristics across treatment groups, under the assumption that the primary respondent's information accurately represents the overall guardian profile and is most relevant for the child's outcomes, thereby reducing complexity and minimizing measurement error.
+		Hours worked outliers: Because less than 2% of observations exceed a plausible upper bound (112>hpw), recoding these outlier values as missing most cleanly preserves the validity of the baseline balance analysis while only marginally reducing sample size.
+	
+	******************************************************************************************************/
+	
+*** Creating Directories ***
+
+	global desktop "/Users/felipedominguez/Desktop" //desktop directory on my mac. change to your home directory
+	global mainpath "$desktop/Jobs & Apps/U Chicago/Profs. Dean & Pope/Data task"
+		//change to where files are stored. subfolders are data, graphs, Stata Files
+	global output "$mainpath/Graphs" //change to where you want graphs to be saved
+
+*** Installing Packages ***
+
+	ssc install tabstatmat, replace
+	ssc install estout, replace
+
+*** Graphs Settings ***
+
+	// set graphics on
+	 set graphics off //toggle
+	graph set window fontface "Times New Roman"
+	global titlesize "size(medium)" // titles will have size medium
+	global subsize "size(medsmall)" //axis titles size medsmall
+	global labsize "size(small)" //axis labels size small
+
+/****************************************************************
+Dataset 1: Childdata
+*****************************************************************/
+
+	import delimited "$mainpath/data/childdata.csv", clear //import childata  from .csv file
+
+*Set the correct variable types, according to codebook*
+
+	recast byte c_totalscore_qmat c_totalscore_bug c_totalscore_m c_totalscore_v ///
+	       c_totalscore_animal c_totalscore_qpns c_totalscore_bp ///
+	       c_totalscore_col c_totalscore_cbnr c_totalscore_act c_totalscore_alpha ///
+	       c_totalscore_prob c_totalscore_copy c_totalscore_pan treatment endline, force
+	recast float age c_totalscore_all, force
+	recast double c_totalscore_asm c_totalscore_ask c_totalscore_mot, force
+	recast long id_child, force
+
+*Label variables according to codebook*
+
+	label variable c_totalscore_qmat "Score on Matrix Reasoning"
+	label variable c_totalscore_bug "Score on Bug Search"
+	label variable c_totalscore_m "Score on Picture Memory"
+	label variable c_totalscore_v "Score on Vocabulary"
+	label variable c_totalscore_animal "Score on Animal Coding"
+	label variable c_totalscore_qpns "Score on Picture Naming"
+	label variable c_totalscore_asm "Score on ASER Math"
+	label variable c_totalscore_ask "Score on ASER Kannada"
+	label variable c_totalscore_mot "Score on Motor Skills"
+	label variable c_totalscore_bp "Score on Body Parts"
+	label variable c_totalscore_col "Score on Colors"
+	label variable c_totalscore_rvs "Score on Receptive Vocab"
+	label variable c_totalscore_cbnr "Score on DIAL Number"
+	label variable c_totalscore_act "Score on Actions"
+	label variable c_totalscore_alpha "Score on Alphabet"
+	label variable c_totalscore_prob "Score on Problem Solving"
+	label variable c_totalscore_copy "Score on Copying"
+	label variable c_totalscore_pan "Score on Panamath"
+	label variable treatment "Treatment"
+	label variable age "Age in Months"
+	label variable c_totalscore_all "Total Score"
+	
+	label define treat_label 0 "Control" 1 "Treated"
+	label values treatment treat_label
+	
+	label define endline_label 0 "Baseline" 1 "Endline"
+	label values endline endline_label
+	
+	order id_child endline treatment age 
+	replace age = . if age <0 //Marking as missing values
+	save "$mainpath/data/childdata.dta", replace //saving it as a .dta file
+	
+	codebook //check its the same 
+	des 
 
 
-cd "/Users/felipedominguez/Desktop/Research_Assistant/Inclusion"
-clear
-import excel "Disability Report.xlsx", firstrow case(lower)
-
-gen id = _n  // Temporary ID to maintain original order
-order id
-
-*Declared_date variable
-rename startdate declared_date
-label var declared_date "Declaration Date"
-drop enddate
-
-* Drop duplicates based on all relevant columns
-duplicates drop studentid declared_date disabilitycode, force
-
-/* Variable for whether or not they declared a disability */
-	gen declared_dis = .
-	replace declared_dis = 0 if disabilitycode == "A"
-	replace declared_dis = 1 if inlist(disabilitycode, "B", "C", "D", "E", "F", "G", "H", "I", "K")
-	replace declared_dis = 2 if disabilitycode == "98"
-	drop if disabilitycode == "99"
-
-	label define declared_dis 0 "No" 1 "Yes" 2 "Prefer not to say"
-	label values declared_dis declared_dis
-	label var declared_dis "Declared Disability"
+/****************************************************************
+Dataset 2: guardian data
+*****************************************************************/
 
 
-* Sequence variable 
-	bysort studentid (declared_date id): gen studentid_number = _n //This variable numbers the entries made by each studentid based on the declared_date and number of disabilities they declared
+	import delimited "$mainpath/data/guardiandata.csv", clear // Import the guardian data CSV file
 
-	label variable studentid_number "Studentid Identifier"
 
-*Last Declaration Variable
-	egen max_studentid_number = max(studentid_number), by(studentid)
-	gen last_declaration = (studentid_number == max_studentid_number)
-	drop max_studentid_number
+* --- Recast non-string variables ---
+	recast long id_child, force
+	recast byte endline, force
+	recast byte respondent, force
+	recast double hoursworked, force
+	recast float edu, force
+
+* --- Convert string variables to numeric ---
+
+	replace prim_type = lower(prim_type)
+
+
+* Create a new numeric variable from prim_type
+
+	gen prim_type_num = . //missing values already marked as missing values 
+	replace prim_type_num = 1 if prim_type == "private"
+	replace prim_type_num = 2 if prim_type == "public"
+	drop prim_type
+	rename prim_type_num prim_type
+	recast byte prim_type, force
+
+
+* For gender
+
+	replace gender = lower(gender)
+	gen gender_num = .
+	replace gender_num = 0 if gender == "male"
+	replace gender_num = 1 if gender == "female"
+	replace gender_num = . if missing(gender) | gender == ""
+	drop gender
+	rename gender_num gender
+
+***Labelling
+
+	label define prim_type_lab  1 "Private" 2 "Public"
+	label values prim_type prim_type_lab
+	
+	label define gender_lab 0 "Male" 1 "Female"
+	label values gender gender_lab
+	
+	label variable endline "Endline Indicator"
+	label variable respondent "Respondent Indicator"
+	label variable hoursworked "Hours Worked"
+	label variable edu "Years of Education"
+	label variable prim_type "Type of primary school planned"
+	label variable gender "Gender of Guardian/Respondent"
+	
+	order id_child endline gender
+	replace hoursworked = . if hoursworked > 112 //Allows for a max of 16 hours a day, making it more realistic
+	count if missing(hoursworked)
+
+* Save the formatted data as a .dta file
+
+	save "$mainpath/data/guardiandata.dta", replace
+
+	codebook //check its the same
+	des
+
+/****************************************************************
+Dataset 3: Merging child and guardian data
+*****************************************************************/
+
+* Open the child data (which has all the child variables)
+
+	use "$mainpath/data/childdata.dta", clear
+	sort id_child endline
+
+* Merge the guardian data (which has been formatted according to the codebook)
+
+	merge 1:m id_child endline using "$mainpath/data/guardiandata.dta"
+
+* Check the merge result
+
+	tab _merge //merge worked 
+	drop _merge
+
+	save "$mainpath/data/combined.dta", replace
+
+/******************************************************************************************************
+Question 1
+******************************************************************************************************/
+
+	use "$mainpath/data/combined.dta", clear
+
+*-----------------------------------------
+* Baseline Balance Table 
+*-----------------------------------------
+
+	preserve
+	    * Restrict to baseline observations
+	    keep if endline == 0
+		keep if respondent == 1
+	
+	    * For the control group (treatment==0)
+	    estpost tabstat age c_totalscore_qmat c_totalscore_bug c_totalscore_m ///
+	                c_totalscore_v c_totalscore_animal c_totalscore_rvs ///
+	                c_totalscore_qpns c_totalscore_all edu hoursworked prim_type if treatment==0, c(stat) stat(mean sd min max n)
+	    eststo control
+	
+	    * For the treated group (treatment==1)
+	    estpost tabstat age c_totalscore_qmat c_totalscore_bug c_totalscore_m ///
+	                c_totalscore_v c_totalscore_animal c_totalscore_rvs ///
+	                c_totalscore_qpns c_totalscore_all edu hoursworked prim_type if treatment==1, c(stat) stat(mean sd min max n)
+	    eststo treated
+	
+	    esttab control treated using "$output/baseline_balance.csv", ///
+			replace ///
+			cells("mean(fmt(2)) sd min(fmt(0)) max(fmt(0)) count(fmt(0))") /// 
+			label mtitles("Control Group" "Treatment Group") nonumber ///
+	           title("Baseline Balance Table") varwidth(25) collabels("Mean" "SD" "Min" "Max" "N")
+			   
+		*Raw table estimates are exported to a .csv file where I just have to format the table
+	restore
+
+/******************************************************************************************************
+Question 2
+******************************************************************************************************/
+
+	preserve 
+	keep if endline ==0 //more obs with complete info
+	    * Keep only the variables needed for the disagreement calculation
+	    keep id_child respondent prim_type
+	
+	    * Reshape so each child's guardian prim_type responses are in one row
+	    reshape wide prim_type, i(id_child) j(respondent)
+	
+	    * Create an indicator for disagreement (if both responses are non-missing)
+	    gen disagree = (prim_type0 != prim_type1) if !missing(prim_type0) & !missing(prim_type1)
+	
+	    * Calculate and display the percentage of disagreement
+	    sum disagree
+	    dis "Percentage of guardians who disagree on school type: " 100 * r(mean) "%"
+	restore
+
+
+/******************************************************************************************************
+Question 3
+******************************************************************************************************/
+
+
+	* 1) Baseline & endline summary by treatment
+		table treatment endline, statistic(mean c_totalscore_all) ///
+		                        statistic(sd c_totalscore_all) ///
+		                        statistic(count c_totalscore_all)
+	
+	* 2) Difference‑in‑differences calculation
+		preserve
+		    keep if !missing(c_totalscore_all)
 		
-	label variable last_declaration "Last Declaration" //dummy//	
-	
-*Declaration type variable
-	gen declaration_type = . 
-	replace declaration_type = 0 if studentid_number == last_declaration
-	replace declaration_type = 1 if studentid_number ==1 & last_declaration != 1
-	replace declaration_type = 2 if studentid_number !=1 & last_declaration ==1
-	replace declaration_type = 3 if studentid_number > 1 & last_declaration != 1
-
-	label define declaration_type 0 "Only" 1 "First" 2 "Last" 3 "Intermediate"
-	label values declaration_type declaration_type
-	label var declaration_type "Declaration Type"
-
-* Sort the data by studentid, declared_date, and id
-	bysort studentid (declared_date id): gen obs_count = _N
-	label variable obs_count "# Obs Per Student"
-
-	
-	
-	
-**#Change Status variable
-	
-	
-	* Identify the first and last non-missing declared_dis for each student
-		bysort studentid (declared_date id): gen first_declared_dis = declared_dis if declaration_type == 1
-		bysort studentid (declared_date id): gen last_declared_dis = declared_dis if declaration_type == 2
-
-	* Replace missing values of first_declared_dis and last_declared_dis
-	bysort studentid: replace first_declared_dis = first_declared_dis[1] if missing(first_declared_dis)
-	bysort studentid: replace last_declared_dis = last_declared_dis[_N] if missing(last_declared_dis)
-
-	* Calculate change_status based on first and last declarations
-	gen change_status = cond(first_declared_dis == last_declared_dis, 0, ///
-		cond(first_declared_dis == 0 & last_declared_dis == 1, 1, ///
-		cond(first_declared_dis == 1 & last_declared_dis == 0, 2, ///
-		cond(first_declared_dis == 0 & last_declared_dis == 2, 3, ///
-		cond(first_declared_dis == 2 & last_declared_dis == 0, 4, ///
-		cond(first_declared_dis == 1 & last_declared_dis == 2, 5, ///
-		cond(first_declared_dis == 2 & last_declared_dis == 1, 6, .)))))))
-
-	* Propagate the change_status to all observations for each student
-	bysort studentid (declared_date id): replace change_status = change_status[1] if missing(change_status)
-
-	* Handle cases with only one observation
-	bysort studentid: replace change_status = 0 if obs_count == 1 & !missing(declared_dis)
-
-	* Label values and variable name
-	label define change_status 0 "No change" 1 "No to yes" 2 "Yes to no" 3 "No to Prefer not to say" 4 "Prefer not to say to no" 5 "Yes to prefer not to say" 6 "Prefer not to say to yes"
-	label values change_status change_status
-	label var change_status "Change Status"
-
-	* Drop intermediate variables
-	drop first_declared_dis last_declared_dis
-
+		    quietly summarize c_totalscore_all if treatment==1 & endline==0
+		    local m_treat_base = r(mean)
+		    quietly summarize c_totalscore_all if treatment==1 & endline==1
+		    local m_treat_end = r(mean)
+		
+		    quietly summarize c_totalscore_all if treatment==0 & endline==0
+		    local m_ctrl_base = r(mean)
+		    quietly summarize c_totalscore_all if treatment==0 & endline==1
+		    local m_ctrl_end = r(mean)
+		
+		    display "Endline difference (Treated–Control): " %6.3f (`m_treat_end' - `m_ctrl_end')
+		    display "Difference‑in‑differences: " %6.3f ((`m_treat_end'-`m_treat_base') - (`m_ctrl_end'-`m_ctrl_base'))
+		
+	* 3) Graph	    
+		twoway ///
+		    (kdensity c_totalscore_all if treatment==0 & endline==0, lcolor(blue) lpattern(solid)) ///
+		    (kdensity c_totalscore_all if treatment==1 & endline==0, lcolor(red) lpattern(solid)) ///
+		    (kdensity c_totalscore_all if treatment==0 & endline==1, lcolor(blue) lpattern(dash)) ///
+		    (kdensity c_totalscore_all if treatment==1 & endline==1, lcolor(red) lpattern(dash)), ///
+		    legend(order(1 "Control Baseline" 2 "Treatment Baseline" 3 "Control Endline" 4 "Treatment Endline")) ///
+		    title("Distribution of Total Score by Treatment and Time", $titlesize) ///
+		    xtitle("Total Score", $subsize) ytitle("Density", $subsize)
+			graph export "$output/totalscore_distributions.png", replace
+		
+		restore
 	
 
+/******************************************************************************************************
+Question 4
+******************************************************************************************************/
 
+	use "$mainpath/data/childdata.dta", clear
+	preserve
 
-*Subsequent Change 
-
-
-	* Generate lagged variable for declared_dis (one lag is sufficient for tracking immediate changes)
-	bysort studentid (declared_date id): gen lag_declareddis = declared_dis[_n-1]
-
-	* Initialize subsequent_change variable with missing values
-	gen subsequent_change = .
-
-	* Identify changes between consecutive observations
-	replace subsequent_change = ///
-		cond(lag_declareddis == declared_dis, 0, ///
-		cond(lag_declareddis == 0 & declared_dis == 1, 1, ///
-		cond(lag_declareddis == 1 & declared_dis == 0, 2, ///
-		cond(lag_declareddis == 0 & declared_dis == 2, 3, ///
-		cond(lag_declareddis == 2 & declared_dis == 0, 4, ///
-		cond(lag_declareddis == 1 & declared_dis == 2, 5, ///
-		cond(lag_declareddis == 2 & declared_dis == 1, 6, .)))))))
-
-	* For the first observation of each student, set subsequent_change to missing (no comparison available)
-	bysort studentid: replace subsequent_change = . if _n == 1
+	* 1)	
+		keep if endline == 0
 	
-	* Set no change for those with only one obs_count
-	replace subsequent_change = 0 if obs_count ==1
-
-	* Propagate the change status to all observations until the next change
-	bysort studentid (declared_date id): replace subsequent_change = subsequent_change[_n-1] if missing(subsequent_change)
-
-	* Label the subsequent_change variable
-	label define subsequent_change 0 "No change" 1 "No to yes" 2 "Yes to no" 3 "No to Prefer not to say" 4 "Prefer not to say to no" 5 "Yes to prefer not to say" 6 "Prefer not to say to yes"
-	label values subsequent_change subsequent_change
-	label var subsequent_change "Subsequent Changes"
-	* Drop the lagged variable as it's no longer needed
-	drop lag_declareddis
-
-*Change identifier variable: numbers chronologically the subsequent changes (includes "no change")
-	bysort studentid (declared_date): gen change_number = sum(!missing(subsequent_change))
-*Change identifier variable: numbers chronologically the subsequent changes (excludes "no change")
-	bysort studentid (declared_date): gen change_number2 = sum(subsequent_change != 0 & !missing(subsequent_change))
-	replace change_number2 = 0 if subsequent_change == 0
-
-
-
+		local domains Reasoning Language Memory Numeracy Motor
 	
-*Average time between changes Variable (first and last)
-	bysort studentid (declared_date): gen initial_date = declared_date if studentid_number == 1
-	by studentid (declared_date): gen last_date = declared_date if last_declaration == 1
-	by studentid (declared_date): replace initial_date = initial_date[_n-1] if missing(initial_date)
-	by studentid (declared_date): replace last_date = last_date[_n-1] if missing(last_date)
+	* List of variables for each domain
+		local Reasoning qmat bug animal prob 
+		local Language v rvs qpns ask
+		local Memory m
+		local Numeracy asm pan cbnr
+		local Motor mot copy bp col act alpha
 
-	gen time_difference = last_date - initial_date
-	replace time_difference = 0 if change_status ==0
-	by studentid: replace time_difference = time_difference[_N]
-	drop initial_date last_date
+	* 2) Compute control-group means & SDs for each test
 
-	label variable time_difference "Total time difference" //in days//
+		foreach var in qmat bug m v animal rvs qpns asm ask mot bp col cbnr act alpha prob copy pan {
+		    quietly summarize c_totalscore_`var' if treatment==0
+		    local m`var' = r(mean)
+		    local sd`var' = r(sd)
+		}
+		
+	* 3) Generate z-scores
 
-*Average time between changes Variable (first declaration and first change)
-	bysort studentid (declared_date): gen initial_date = declared_date if declaration_type == 1
-	by studentid (declared_date): gen firstchange_date = declared_date if change_number == 1
-	by studentid (declared_date): replace initial_date = initial_date[_n-1] if missing(initial_date)
-	by studentid (declared_date): replace firstchange_date = firstchange_date[_n-1] if missing(firstchange_date)
+		foreach var in qmat bug m v animal rvs qpns asm ask mot bp col cbnr act alpha prob copy pan {
+		    gen z_`var' = (c_totalscore_`var' - `m`var'')/`sd`var''
+		}
 
-	gen time_difference2 = firstchange_date - initial_date
-	replace time_difference2 = 0 if change_status ==0
-	by studentid: replace time_difference2 = time_difference2[_N]
-	drop initial_date firstchange_date
+* 4) Build one index per domain
 
-	label variable time_difference2 "Time between Changes" //in days//
+	foreach dom of local domains {
+	    local vars = "`dom'"
+	    local list
+	    foreach v of local `dom' {
+	        local list `list' z_`v'
+	    }
+	    egen idx_`dom' = rowmean(`list')
+	    label variable idx_`dom' "`dom' summary index base"
+	}
+	drop z_* //get rid of intermediate variables
 
+	tempfile temp_baseline_scores
+	save `temp_baseline_scores', replace
 
+	restore
+
+*** Repeat procedure for endline ***
+
+	keep if endline == 1
+
+	local domains Reasoning Language Memory Numeracy Motor
+
+	* List of variables for each domain
+
+		local Reasoning qmat bug prob
+		local Language v rvs qpns ask
+		local Memory m
+		local Numeracy asm pan cbnr
+		local Motor mot copy bp col act alpha
+
+	* 2) Compute control-group means & SDs for each test
+
+		foreach var in qmat bug m v animal rvs qpns asm ask mot bp col cbnr act alpha prob copy pan {
+		    quietly summarize c_totalscore_`var' if treatment==0
+		    local m`var' = r(mean)
+		    local sd`var' = r(sd)
+		}
+		
+	* 3) Generate z-scores
+		foreach var in qmat bug m v animal rvs qpns asm ask mot bp col cbnr act alpha prob copy pan {
+		    gen z_`var' = (c_totalscore_`var' - `m`var'')/`sd`var''
+		}
+
+	* 4) Build one index per domain
+		foreach dom of local domains {
+		    local vars = "`dom'"
+		    local list
+		    foreach v of local `dom' {
+		        local list `list' z_`v'
+		    }
+		    egen idx_`dom' = rowmean(`list')
+		    label variable idx_`dom' "`dom' summary index"
+		}
+		drop z_* //get rid of intermediate variables
+		
+		* Save endline indices before merging
+		tempfile temp_endline_scores
+		save `temp_endline_scores', replace
+
+* Reload full dataset
+
+	use "$mainpath/data/combined.dta", clear
+
+	* Merge baseline scores
+
+		merge m:1 id_child  using `temp_baseline_scores'
+		rename (idx_Reasoning idx_Language idx_Memory idx_Numeracy idx_Motor) ///
+		       (idx_Reasoning_base idx_Language_base idx_Memory_base ///
+		        idx_Numeracy_base idx_Motor_base)
+		
+		
+		drop _merge
+
+	*Merge endline scores
+
+		merge m:1 id_child using `temp_endline_scores'
+		drop _merge
+
+*-----------------------------------------
+* Prepare dataset for regression
+*-----------------------------------------
+
+	* Create mother_edu only for female guardians
+
+		gen mother_edu = .
+		replace mother_edu = edu if gender == 1
+		
+	* Generate baseline age variable (only for baseline observations)
+
+		gen base_age = age if endline == 0
 	
+	* Propagate values to all observations for each child
+
+		bysort id_child (endline): replace base_age = base_age[_n-1] if missing(base_age)
+		bysort id_child (endline): replace mother_edu = mother_edu[_n-1] if missing(mother_edu)
 	
-*Restore original order of data  
-sort id
-drop id
+	* Drop unnecessary variables
 
-
-*Analysis and distributions
-
-	*Initial Distribution of declaration    
-	tab declared_dis if programmetype == "Postgraduate" & studentid_number == 1
-	tab declared_dis if programmetype == "Postgraduate" & declaration_type < 2 //equivalent to each other // 
-
-	*Distribution of changes (first to last)
-	tab change_status if programmetype == "Postgraduate" & studentid_number == 1
-
-	tab change_status if programmetype == "Postgraduate" & studentid_number == 1 & change_status != 0 
-
-	*Distribution of intermediate changes
-	tab subsequent_change if programmetype == "Postgraduate" & change_number == 1
-
-	tab subsequent_change if programmetype == "Postgraduate"  & subsequent_change != 0 
-
-	* Final Distribution of declaration
-	tab declared_dis if last_declaration == 1 & programmetype == "Postgraduate"
-
-	* Distribution of Declaration type. Overlaps because of multiple entries for each student
-	tab declaration_type if programmetype == "Postgraduate"
-
-	*Time it takes for students to change their status on from first to last 
-	bysort change_status: sum time_difference  if programmetype == "Postgraduate" & studentid_number == 1
-	sum time_difference  if programmetype == "Postgraduate" & studentid_number == 1 & change_status !=0
-	*Time it takes for students to change their status 
-	bysort subsequent_change: sum time_difference2  if programmetype == "Postgraduate" & change_number2 == 1
-	sum time_difference2  if programmetype == "Postgraduate" & change_number2 == 1
+		drop c_totalscore* hoursworked prim_type edu age respondent
 	
-	*Number of changes for students
-	bysort subsequent_change: sum change_number if programmetype == "Postgraduate" & subsequent_change != 0 & !missing(subsequent_change)
-	sum change_number if programmetype == "Postgraduate" & subsequent_change != 0 & !missing(subsequent_change)
-	
-/* Graphs */
+	* Keep only endline observations (for treatment effect estimation)
 
-* Initial Distribution of Declaration Bar Graph
-graph bar (count) if programmetype == "Postgraduate" & declaration_type <= 1, ///
-    over(declared_dis) ///
-    yti("Frequency") ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.8) ///
-    ti("Frequency (Count) of Disability Declaration for Postgraduate Students") ///
-    name(countgraph, replace)
+		keep if endline == 1  
+		keep if gender == 1
 
-graph bar (percent) if programmetype == "Postgraduate" & declaration_type <= 1, ///
-    over(declared_dis) yti("Percentage") ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.8) ///
-    ti("Frequency (Percent) of Disability Declaration for Postgraduate Students") ///
-    name(percentgraph, replace)
+*-----------------------------------------
+* Perform the regression
+*-----------------------------------------
 
+* Run regressions for each index
 
-*Distribution of changes in declaration graph	
-graph bar (count) if programmetype == "Postgraduate" & studentid_number ==1 & change_status != 0, ///
-	over(change_status) ///
-    yti("Frequency") ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.5) ///
-    ti("Frequency (Count) of Changes in Disability Declaration for Postgraduate Students") ///
-    name(countchangegraph, replace)
+	foreach idx in Reasoning Language Memory Numeracy Motor {
+	    regress idx_`idx' treatment  base_age mother_edu idx_`idx'_base
+	    eststo `idx'
+	}
 
-graph bar (percent) if programmetype == "Postgraduate" & studentid_number ==1  & change_status != 0, ///
-	over(change_status) ///
-    yti("Frequency") ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.5) ///
-    ti("Frequency (Percent) of Changes in Disability Declaration for Postgraduate Students") ///
-    name(percentchangegraph, replace)
+* Export regression results
 
-*Distribution of final declaration graph	
-graph bar (count) if programmetype == "Postgraduate" & last_declaration ==1, ///
-	over(declared_dis) ///
-    yti("Frequency") ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.8) ///
-    ti("Frequency (Count) of Final Disability Declaration for Postgraduate Students") ///
-    name(countfinalgraph, replace)
-
-graph bar (percent) if programmetype == "Postgraduate" & last_declaration ==1, ///
-	over(declared_dis) ///
-    yti("Frequency") ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.8) ///
-    ti("Frequency (Percent) of Final Disability Declaration for Postgraduate Students") ///
-    name(percentfinalgraph, replace) 
-
-*Intermediate changes graphs
-graph bar (count) if programmetype == "Postgraduate" & subsequent_change != 0, ///
-	yti("Frequency") ///
-	over(subsequent_change) ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.5) ///
-    ti("Frequency (Count) of Total Changes in Disability Declaration for Postgraduate Students") ///
-    name(intermediatecountgraph, replace) 
-
-graph bar (percent) if programmetype == "Postgraduate" & subsequent_change != 0, ///
-	yti("Frequency") ///
-	over(subsequent_change) ///
-    blabel(bar, format(%9.0f)) ///
-    scale(0.5) ///
-    ti("Frequency (Count) of Total Changes in Disability Declaration for Postgraduate Students") ///
-    name(intermediatepercentgraph, replace) 
-*/
-
+	esttab Reasoning Language Memory Numeracy Motor using "$output/treatment_effects.csv", ///
+	    replace se star(* 0.10 ** 0.05 *** 0.01) ///
+	    label title("Treatment Effects on Cognitive and Motor Indices") ///
+	    coeflabels(treatment "Treatment Effect") ///
+	    stats(r2 N, labels("R-squared" "Observations"))
+	// Exported as .csv ready to format
+	log close
 	
 	
 
