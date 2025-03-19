@@ -11,13 +11,13 @@ Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
 - [Summary Statistics](sample_stats.html)
 
 Inclusion for Disabled Students at LSE
-- [Preliminary Data Analysis](basi_analysis.html)
+- [Preliminary Data Analysis](basic_analysis.html)
 
 Working with different types of data
-- [Longitudinal Data from RCT](longitudinal_dara.html)
-- [Survey-Weighted Aggregation](CPS_data.html)
-- [Advanced Data Management](survey_microdata.html)
-- [Complex Survey Data](cross-section_data.html)
+- [Longitudinal Data from RCT](longitudinal_data.html)
+- [CPS Weighted Analysis](CPS_data.html)
+- [Survey Microdata](survey_microdata.html)
+- [Complex Cross-Sectional Survey Data](cross-section_data.html)
 
 Independent Research
 - [Chronic Malnutrition & Marital Status](econometrics_final.html)
