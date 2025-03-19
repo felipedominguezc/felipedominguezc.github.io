@@ -12,6 +12,7 @@
 * INPUT:          MH_raw.dta
 * OUTPUT:         Descriptive statistics, chi-square tests, and variables saved in memory
 * DEPENDENCIES:   None (uses built-in Stata commands)
+
 *******************************************************
 
 ********** SECTION 1: SETUP **********
