@@ -3,8 +3,8 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 ```stata
 /**************************************************************************************************************************/
 
- cd "/Users/felipedominguez/Desktop/Research_Assistant/Hurricanes & music " 
- use "2024-05-23 - revised dataset2.dta" , clear
+   cd "/Users/felipedominguez/Desktop/Research_Assistant/Hurricanes & music " 
+   use "2024-05-23 - revised dataset2.dta" , clear
 
 /*TABLE STATS*/
 
