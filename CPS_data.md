@@ -1,11 +1,15 @@
-CPS Data with Weight aggregation
+CPS Data with p-Weight Aggregation for LFPR Analysis
+
 ```stata
-/* 
+/***************************************************************************************************************
 
 Author: Felipe Dominguez Cornejo
-*/
+	This is a Data Task for a Pre-doc position at a top university where I moved on onto the next hiring process
+
+*/**************************************************************************************************************
 
 /*Enter path to FOLDER below. Make sure to include quotation marks and avoid any unnecessary "\" */
+
 cd "..."
 use CPS_data.dta, clear /*Enter data name here */
 
@@ -13,15 +17,17 @@ label define sex_lab 1 "Male" 2 "Female" 9 "NIU"
 label values sex sex_lab
 
 ****************************************************************************************
+
 **#Calculate LFPR by group with weights (Variables to be used for every question)
 gen adult_w = (popstat == 1) * wtfinl //adult_civilian indicator weighted
 gen in_lab_w = (labforce == 2) * wtfinl //adult civilian in labor force indicator weighted
+
 ****************************************************************************************
 
 
-********************************************
+***************************************************************************************************
 **# 1 LFPR by age Profile in 1999 & 2024
-********************************************
+***************************************************************************************************
 
 *Create Age groups:
 
@@ -39,6 +45,7 @@ label variable age_group "Age Group"
 
 
 * Overall LFPR by year and age_group
+
 local age_groups 1 2 3 4 5 6 7
 
 foreach age in `age_groups' {
@@ -57,6 +64,7 @@ label variable overall_lfpr6 "Overall LFPR for Ages 55-64"
 label variable overall_lfpr7 "Overall LFPR for Ages 65+"
 
 * LFPR for each age_group by year, age_group, and sex
+
 foreach age in `age_groups' {
     by year age_group sex, sort: egen adult_civilian`age' = total(((popstat == 1) & (age_group == `age')) * wtfinl)
     by year age_group sex: egen labor_force`age' = total(((labforce == 2) & (age_group == `age')) * wtfinl)
@@ -64,6 +72,7 @@ foreach age in `age_groups' {
 }
 
 *Label LFPR variables for each age group
+
 label variable lfpr1 "LFPR for Ages 15-19"
 label variable lfpr2 "LFPR for Ages 20-24"
 label variable lfpr3 "LFPR for Ages 25-34"
@@ -72,9 +81,12 @@ label variable lfpr5 "LFPR for Ages 45-54"
 label variable lfpr6 "LFPR for Ages 55-64"
 label variable lfpr7 "LFPR for Ages 65+"
 
+******************************************************************************
 
 *Graphs
-***********************
+
+******************************************************************************
+
 graph bar lfpr* if sex == 1, over(year) ///
     title("LFPR by Age Group, Men(1999 vs. 2024)") ///
     ytitle("Labor Force Participation Rate (%)") ///
@@ -103,9 +115,13 @@ graph bar overall_lfpr*, over(year) ///
 	nodraw
 
 drop adult_civilian* labor_force*
-**********************************************
+
+*****************************************************************************************************
+
 **# 3 Overall LFPR by sex and year
-**********************************************
+
+*****************************************************************************************************
+
 keep if age >= 16 
 
 gen adult_total_men      = cond(sex == 1, adult_w, 0)
@@ -141,9 +157,11 @@ bysort year: sum overall_lfpr_full
 bysort year: sum overall_lfpr_men
 bysort year: sum overall_lfpr_women
 
-**********************************************
+*****************************************************************************************************
+
 **# 4 2024 Aggregate LFPR with 1999 age distribution
-**********************************************
+
+*****************************************************************************************************
 
 *Get total adult population and labor force by year & age_group
 preserve
