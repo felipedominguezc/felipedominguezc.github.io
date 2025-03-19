@@ -1,11 +1,13 @@
 Administrative Data
 
 ```stata
-/*
-Author: FDC
-Data Task 
 
-*******************************************************************************/
+/***************************************************************************************************************
+
+Author: Felipe Dominguez Cornejo
+This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for disabled students at the LSe
+
+*****************************************************************************************************************/
 
 
 cd "/Users/felipedominguez/Desktop/Research_Assistant/Inclusion"
@@ -16,14 +18,17 @@ gen id = _n  // Temporary ID to maintain original order
 order id
 
 *Declared_date variable
+
 rename startdate declared_date
 label var declared_date "Declaration Date"
 drop enddate
 
 * Drop duplicates based on all relevant columns
+
 duplicates drop studentid declared_date disabilitycode, force
 
 /* Variable for whether or not they declared a disability */
+
 	gen declared_dis = .
 	replace declared_dis = 0 if disabilitycode == "A"
 	replace declared_dis = 1 if inlist(disabilitycode, "B", "C", "D", "E", "F", "G", "H", "I", "K")
@@ -35,8 +40,10 @@ duplicates drop studentid declared_date disabilitycode, force
 	label var declared_dis "Declared Disability"
 
 
-* Sequence variable 
-	bysort studentid (declared_date id): gen studentid_number = _n //This variable numbers the entries made by each studentid based on the declared_date and number of disabilities they declared
+* Sequence variable
+
+	bysort studentid (declared_date id): gen studentid_number = _n
+	// This variable numbers the entries made by each studentid based on the declared_date and number of disabilities they declared
 
 	label variable studentid_number "Studentid Identifier"
 
@@ -48,6 +55,7 @@ duplicates drop studentid declared_date disabilitycode, force
 	label variable last_declaration "Last Declaration" //dummy//	
 	
 *Declaration type variable
+
 	gen declaration_type = . 
 	replace declaration_type = 0 if studentid_number == last_declaration
 	replace declaration_type = 1 if studentid_number ==1 & last_declaration != 1
@@ -73,8 +81,8 @@ duplicates drop studentid declared_date disabilitycode, force
 		bysort studentid (declared_date id): gen last_declared_dis = declared_dis if declaration_type == 2
 
 	* Replace missing values of first_declared_dis and last_declared_dis
-	bysort studentid: replace first_declared_dis = first_declared_dis[1] if missing(first_declared_dis)
-	bysort studentid: replace last_declared_dis = last_declared_dis[_N] if missing(last_declared_dis)
+		bysort studentid: replace first_declared_dis = first_declared_dis[1] if missing(first_declared_dis)
+		bysort studentid: replace last_declared_dis = last_declared_dis[_N] if missing(last_declared_dis)
 
 	* Calculate change_status based on first and last declarations
 	gen change_status = cond(first_declared_dis == last_declared_dis, 0, ///
@@ -86,17 +94,24 @@ duplicates drop studentid declared_date disabilitycode, force
 		cond(first_declared_dis == 2 & last_declared_dis == 1, 6, .)))))))
 
 	* Propagate the change_status to all observations for each student
-	bysort studentid (declared_date id): replace change_status = change_status[1] if missing(change_status)
+		bysort studentid (declared_date id): replace change_status = change_status[1] if missing(change_status)
 
 	* Handle cases with only one observation
-	bysort studentid: replace change_status = 0 if obs_count == 1 & !missing(declared_dis)
+		bysort studentid: replace change_status = 0 if obs_count == 1 & !missing(declared_dis)
 
 	* Label values and variable name
-	label define change_status 0 "No change" 1 "No to yes" 2 "Yes to no" 3 "No to Prefer not to say" 4 "Prefer not to say to no" 5 "Yes to prefer not to say" 6 "Prefer not to say to yes"
-	label values change_status change_status
-	label var change_status "Change Status"
+		label define change_status 0 "No change" ///
+		1 "No to yes" 2 "Yes to no" ///
+		3 "No to Prefer not to say" ///
+		4 "Prefer not to say to no" ///
+		5 "Yes to prefer not to say" ///
+		6 "Prefer not to say to yes"
+
+		label values change_status change_status
+		label var change_status "Change Status"
 
 	* Drop intermediate variables
+
 	drop first_declared_dis last_declared_dis
 
 	
@@ -107,39 +122,47 @@ duplicates drop studentid declared_date disabilitycode, force
 
 
 	* Generate lagged variable for declared_dis (one lag is sufficient for tracking immediate changes)
-	bysort studentid (declared_date id): gen lag_declareddis = declared_dis[_n-1]
+		bysort studentid (declared_date id): gen lag_declareddis = declared_dis[_n-1]
 
 	* Initialize subsequent_change variable with missing values
-	gen subsequent_change = .
+		gen subsequent_change = .
 
 	* Identify changes between consecutive observations
-	replace subsequent_change = ///
-		cond(lag_declareddis == declared_dis, 0, ///
-		cond(lag_declareddis == 0 & declared_dis == 1, 1, ///
-		cond(lag_declareddis == 1 & declared_dis == 0, 2, ///
-		cond(lag_declareddis == 0 & declared_dis == 2, 3, ///
-		cond(lag_declareddis == 2 & declared_dis == 0, 4, ///
-		cond(lag_declareddis == 1 & declared_dis == 2, 5, ///
-		cond(lag_declareddis == 2 & declared_dis == 1, 6, .)))))))
+		replace subsequent_change = ///
+			cond(lag_declareddis == declared_dis, 0, ///
+			cond(lag_declareddis == 0 & declared_dis == 1, 1, ///
+			cond(lag_declareddis == 1 & declared_dis == 0, 2, ///
+			cond(lag_declareddis == 0 & declared_dis == 2, 3, ///
+			cond(lag_declareddis == 2 & declared_dis == 0, 4, ///
+			cond(lag_declareddis == 1 & declared_dis == 2, 5, ///
+			cond(lag_declareddis == 2 & declared_dis == 1, 6, .)))))))
 
 	* For the first observation of each student, set subsequent_change to missing (no comparison available)
-	bysort studentid: replace subsequent_change = . if _n == 1
+		bysort studentid: replace subsequent_change = . if _n == 1
 	
 	* Set no change for those with only one obs_count
-	replace subsequent_change = 0 if obs_count ==1
+		replace subsequent_change = 0 if obs_count ==1
 
 	* Propagate the change status to all observations until the next change
-	bysort studentid (declared_date id): replace subsequent_change = subsequent_change[_n-1] if missing(subsequent_change)
+		bysort studentid (declared_date id): replace subsequent_change = subsequent_change[_n-1] if missing(subsequent_change)
 
 	* Label the subsequent_change variable
-	label define subsequent_change 0 "No change" 1 "No to yes" 2 "Yes to no" 3 "No to Prefer not to say" 4 "Prefer not to say to no" 5 "Yes to prefer not to say" 6 "Prefer not to say to yes"
-	label values subsequent_change subsequent_change
-	label var subsequent_change "Subsequent Changes"
+		label define subsequent_change 0 "No change" ///
+		1 "No to yes" 2 "Yes to no" ///
+		3 "No to Prefer not to say" ///
+		4 "Prefer not to say to no" ///
+		5 "Yes to prefer not to say" ///
+		6 "Prefer not to say to yes"
+
+		label values subsequent_change subsequent_change
+		label var subsequent_change "Subsequent Changes"
+
 	* Drop the lagged variable as it's no longer needed
-	drop lag_declareddis
+		drop lag_declareddis
 
 *Change identifier variable: numbers chronologically the subsequent changes (includes "no change")
 	bysort studentid (declared_date): gen change_number = sum(!missing(subsequent_change))
+
 *Change identifier variable: numbers chronologically the subsequent changes (excludes "no change")
 	bysort studentid (declared_date): gen change_number2 = sum(subsequent_change != 0 & !missing(subsequent_change))
 	replace change_number2 = 0 if subsequent_change == 0
@@ -217,6 +240,7 @@ drop id
 /* Graphs */
 
 * Initial Distribution of Declaration Bar Graph
+
 graph bar (count) if programmetype == "Postgraduate" & declaration_type <= 1, ///
     over(declared_dis) ///
     yti("Frequency") ///
@@ -233,7 +257,8 @@ graph bar (percent) if programmetype == "Postgraduate" & declaration_type <= 1, 
     name(percentgraph, replace)
 
 
-*Distribution of changes in declaration graph	
+*Distribution of changes in declaration graph
+
 graph bar (count) if programmetype == "Postgraduate" & studentid_number ==1 & change_status != 0, ///
 	over(change_status) ///
     yti("Frequency") ///
@@ -250,7 +275,8 @@ graph bar (percent) if programmetype == "Postgraduate" & studentid_number ==1  &
     ti("Frequency (Percent) of Changes in Disability Declaration for Postgraduate Students") ///
     name(percentchangegraph, replace)
 
-*Distribution of final declaration graph	
+*Distribution of final declaration graph
+	
 graph bar (count) if programmetype == "Postgraduate" & last_declaration ==1, ///
 	over(declared_dis) ///
     yti("Frequency") ///
@@ -268,6 +294,7 @@ graph bar (percent) if programmetype == "Postgraduate" & last_declaration ==1, /
     name(percentfinalgraph, replace) 
 
 *Intermediate changes graphs
+
 graph bar (count) if programmetype == "Postgraduate" & subsequent_change != 0, ///
 	yti("Frequency") ///
 	over(subsequent_change) ///
