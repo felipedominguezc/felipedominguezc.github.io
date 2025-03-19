@@ -15,3 +15,6 @@ Working with different types of data
 - [Survey-Weighted Aggregation](CPS_data.html)
 - [Advanced Data Management](survey_microdata.html)
 - [Complex Survey Data](cross-section_data.html)
+
+Independent Research
+- [Chronic Malnutrition & Marital Status](econometrics_final.html)
