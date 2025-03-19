@@ -7,5 +7,5 @@ Stata coding portfolio
 
 Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
 - [Data Cleaning](sample_cleanup.html)
-- [Data Visualization](sample_graphs.md)
-- [Summary Statistics](sample_stats.md)
+- [Data Visualization](sample_graphs.html)
+- [Summary Statistics](sample_stats.html)
