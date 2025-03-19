@@ -10,6 +10,9 @@ Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
 - [Data Visualization](sample_graphs.html)
 - [Summary Statistics](sample_stats.html)
 
+Inclusion for Disabled Students at LSE
+- [Preliminary Data Analysis](basi_analysis.html)
+
 Working with different types of data
 - [Longitudinal Data from RCT](longitudinal_dara.html)
 - [Survey-Weighted Aggregation](CPS_data.html)
