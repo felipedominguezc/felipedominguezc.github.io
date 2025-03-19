@@ -2,7 +2,8 @@
 Stata coding portfolio
 
 ```markdown
-## My Stata Projects
 
-- [Data Cleaning Example](sample_analysis.html)
+## My Stata Projects
+Hurricanes & Music Porject with Dr. Ganga Shreedhar (LSE)
+- [Data Cleaning ](sample_cleanup.html)
 
