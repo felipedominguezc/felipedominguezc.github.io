@@ -5,7 +5,8 @@ Administrative Data
 /***************************************************************************************************************
 
 Author: Felipe Dominguez Cornejo
-This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for disabled students at the LSe
+This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for
+disabled students at the LSe
 
 *****************************************************************************************************************/
 
@@ -17,13 +18,14 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 	gen id = _n  // Temporary ID to maintain original order
 	order id
 
-*Declared_date variable
+/* Declared_date variable */
 
 	rename startdate declared_date
 	label var declared_date "Declaration Date"
 	drop enddate
 
-* Drop duplicates based on all relevant columns
+
+/* Drop duplicates based on all relevant columns */
 
 	duplicates drop studentid declared_date disabilitycode, force
 
@@ -40,14 +42,14 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 	label var declared_dis "Declared Disability"
 
 
-* Sequence variable
+/* Sequence variable */
 
 	bysort studentid (declared_date id): gen studentid_number = _n
 	// This variable numbers the entries made by each studentid based on the declared_date and number of disabilities they declared
 
 	label variable studentid_number "Studentid Identifier"
 
-*Last Declaration Variable
+/* Last Declaration Variable */
 
 	egen max_studentid_number = max(studentid_number), by(studentid)
 	gen last_declaration = (studentid_number == max_studentid_number)
@@ -55,7 +57,7 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 		
 	label variable last_declaration "Last Declaration" //dummy//	
 	
-*Declaration type variable
+/* Declaration type variable */
 
 	gen declaration_type = . 
 	replace declaration_type = 0 if studentid_number == last_declaration
@@ -67,7 +69,7 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 	label values declaration_type declaration_type
 	label var declaration_type "Declaration Type"
 
-* Sort the data by studentid, declared_date, and id
+/* Sort the data by studentid, declared_date, and id */
 
 	bysort studentid (declared_date id): gen obs_count = _N
 	label variable obs_count "# Obs Per Student"
@@ -170,11 +172,11 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 
 		drop lag_declareddis
 
-*Change identifier variable: numbers chronologically the subsequent changes (includes "no change")
+/* Change identifier variable: numbers chronologically the subsequent changes (includes "no change") */
 
 	bysort studentid (declared_date): gen change_number = sum(!missing(subsequent_change))
 
-*Change identifier variable: numbers chronologically the subsequent changes (excludes "no change")
+/* Change identifier variable: numbers chronologically the subsequent changes (excludes "no change") */
 
 	bysort studentid (declared_date): gen change_number2 = sum(subsequent_change != 0 & !missing(subsequent_change))
 	replace change_number2 = 0 if subsequent_change == 0
@@ -182,7 +184,8 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 
 
 	
-*Average time between changes Variable (first and last)
+/* Average time between changes Variable (first and last) */
+
 	bysort studentid (declared_date): gen initial_date = declared_date if studentid_number == 1
 	by studentid (declared_date): gen last_date = declared_date if last_declaration == 1
 	by studentid (declared_date): replace initial_date = initial_date[_n-1] if missing(initial_date)
@@ -195,7 +198,7 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 
 	label variable time_difference "Total time difference" //in days//
 
-*Average time between changes Variable (first declaration and first change)
+/* Average time between changes Variable (first declaration and first change) */
 
 	bysort studentid (declared_date): gen initial_date = declared_date if declaration_type == 1
 	by studentid (declared_date): gen firstchange_date = declared_date if change_number == 1
@@ -212,7 +215,8 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 
 	
 	
-*Restore original order of data  
+/* Restore original order of data  */
+
 	sort id
 	drop id
 
