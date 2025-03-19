@@ -3,7 +3,7 @@ Stata coding portfolio
 
 ```markdown
 
-## My Stata Experience
+## My Stata Experience:
 
 Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
 - [Data Cleaning](sample_cleanup.html)
