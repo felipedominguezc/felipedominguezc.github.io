@@ -21,3 +21,6 @@ Working with different types of data
 
 Independent Research
 - [Chronic Malnutrition & Marital Status](econometrics_final.html)
+
+## My Opinion Piece on the IMF in Argentina
+- [Available in PDF](op-ed_writing sample.pdf)
