@@ -6,6 +6,7 @@ Experimental Data Management
 	capture log close
 
 /******************************************************************************************************************************************
+
 Author: Felipe Dominguez Cornejo
 U Chicago Booth School of Business
 Data Task for RA position with Professors Pope & Dean
@@ -14,7 +15,7 @@ Data Task for RA position with Professors Pope & Dean
 
 	log using "/Users/felipedominguez/Desktop/Jobs & Apps/U Chicago/Profs. Dean & Pope/Data task/Stata Files/FDC_data_task.txt", replace
 
-	/******************************************************************************************************
+/******************************************************************************************************
 	Why did I write this code?
 		This is my coed for the data task for an RA position with Professor Dean and Professor Pope at 
 		Chicago Booth. They focus on behavioral economics.
@@ -32,7 +33,7 @@ Data Task for RA position with Professors Pope & Dean
 		Q1: I chose to use only the primary respondent because it provides a clear one-to-one comparison of guardian characteristics across treatment groups, under the assumption that the primary respondent's information accurately represents the overall guardian profile and is most relevant for the child's outcomes, thereby reducing complexity and minimizing measurement error.
 		Hours worked outliers: Because less than 2% of observations exceed a plausible upper bound (112>hpw), recoding these outlier values as missing most cleanly preserves the validity of the baseline balance analysis while only marginally reducing sample size.
 	
-	******************************************************************************************************/
+******************************************************************************************************/
 	
 *** Creating Directories ***
 
@@ -56,7 +57,9 @@ Data Task for RA position with Professors Pope & Dean
 	global labsize "size(small)" //axis labels size small
 
 /****************************************************************
+
 Dataset 1: Childdata
+
 *****************************************************************/
 
 	import delimited "$mainpath/data/childdata.csv", clear //import childata  from .csv file
@@ -110,26 +113,28 @@ Dataset 1: Childdata
 
 
 /****************************************************************
+
 Dataset 2: guardian data
+
 *****************************************************************/
 
 
 	import delimited "$mainpath/data/guardiandata.csv", clear // Import the guardian data CSV file
 
 
-* --- Recast non-string variables ---
+/* --- Recast non-string variables ---*/
 	recast long id_child, force
 	recast byte endline, force
 	recast byte respondent, force
 	recast double hoursworked, force
 	recast float edu, force
 
-* --- Convert string variables to numeric ---
+/* --- Convert string variables to numeric ---*/
 
 	replace prim_type = lower(prim_type)
 
 
-* Create a new numeric variable from prim_type
+/* Create a new numeric variable from prim_type */
 
 	gen prim_type_num = . //missing values already marked as missing values 
 	replace prim_type_num = 1 if prim_type == "private"
@@ -139,7 +144,7 @@ Dataset 2: guardian data
 	recast byte prim_type, force
 
 
-* For gender
+/* For gender */
 
 	replace gender = lower(gender)
 	gen gender_num = .
@@ -168,7 +173,7 @@ Dataset 2: guardian data
 	replace hoursworked = . if hoursworked > 112 //Allows for a max of 16 hours a day, making it more realistic
 	count if missing(hoursworked)
 
-* Save the formatted data as a .dta file
+*** Save the formatted data as a .dta file
 
 	save "$mainpath/data/guardiandata.dta", replace
 
@@ -176,19 +181,21 @@ Dataset 2: guardian data
 	des
 
 /****************************************************************
+
 Dataset 3: Merging child and guardian data
+
 *****************************************************************/
 
-* Open the child data (which has all the child variables)
+*** Open the child data (which has all the child variables)
 
 	use "$mainpath/data/childdata.dta", clear
 	sort id_child endline
 
-* Merge the guardian data (which has been formatted according to the codebook)
+*** Merge the guardian data (which has been formatted according to the codebook)
 
 	merge 1:m id_child endline using "$mainpath/data/guardiandata.dta"
 
-* Check the merge result
+*** Check the merge result
 
 	tab _merge //merge worked 
 	drop _merge
@@ -196,16 +203,18 @@ Dataset 3: Merging child and guardian data
 	save "$mainpath/data/combined.dta", replace
 
 /******************************************************************************************************
+
 Question 1
+
 ******************************************************************************************************/
 
 	use "$mainpath/data/combined.dta", clear
 
-*-----------------------------------------
+/*-----------------------------------------
 * Baseline Balance Table 
-*-----------------------------------------
+*-----------------------------------------*/
 
-	preserve
+		preserve
 	    * Restrict to baseline observations
 	    keep if endline == 0
 		keep if respondent == 1
@@ -232,7 +241,9 @@ Question 1
 	restore
 
 /******************************************************************************************************
+
 Question 2
+
 ******************************************************************************************************/
 
 	preserve 
@@ -253,10 +264,12 @@ Question 2
 
 
 /******************************************************************************************************
+
 Question 3
+
 ******************************************************************************************************/
 
-
+***
 	* 1) Baseline & endline summary by treatment
 		table treatment endline, statistic(mean c_totalscore_all) ///
 		                        statistic(sd c_totalscore_all) ///
@@ -294,9 +307,12 @@ Question 3
 	
 
 /******************************************************************************************************
+
 Question 4
+
 ******************************************************************************************************/
 
+***
 	use "$mainpath/data/childdata.dta", clear
 	preserve
 
@@ -387,7 +403,7 @@ Question 4
 		tempfile temp_endline_scores
 		save `temp_endline_scores', replace
 
-* Reload full dataset
+***Reload full dataset
 
 	use "$mainpath/data/combined.dta", clear
 
@@ -406,10 +422,13 @@ Question 4
 		merge m:1 id_child using `temp_endline_scores'
 		drop _merge
 
-*-----------------------------------------
-* Prepare dataset for regression
-*-----------------------------------------
+/*-----------------------------------------
 
+* Prepare dataset for regression
+
+*-----------------------------------------*/
+
+***
 	* Create mother_edu only for female guardians
 
 		gen mother_edu = .
@@ -433,18 +452,20 @@ Question 4
 		keep if endline == 1  
 		keep if gender == 1
 
-*-----------------------------------------
-* Perform the regression
-*-----------------------------------------
+/*-----------------------------------------
 
-* Run regressions for each index
+* Perform the regression
+
+*-----------------------------------------*/
+
+*** Run regressions for each index
 
 	foreach idx in Reasoning Language Memory Numeracy Motor {
 	    regress idx_`idx' treatment  base_age mother_edu idx_`idx'_base
 	    eststo `idx'
 	}
 
-* Export regression results
+*** Export regression results
 
 	esttab Reasoning Language Memory Numeracy Motor using "$output/treatment_effects.csv", ///
 	    replace se star(* 0.10 ** 0.05 *** 0.01) ///
