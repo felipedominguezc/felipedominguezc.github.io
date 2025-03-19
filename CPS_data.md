@@ -6,7 +6,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 Author: Felipe Dominguez Cornejo
 	This is a Data Task for a Pre-doc position at a top university where I moved on onto the next hiring process
 
-*/**************************************************************************************************************
+***************************************************************************************************************/
 
 /*Enter path to FOLDER below. Make sure to include quotation marks and avoid any unnecessary "\" */
 
