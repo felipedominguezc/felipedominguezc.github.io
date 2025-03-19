@@ -87,13 +87,13 @@ This is part of the preliminary quantitative analysis I conducted for a project 
 		bysort studentid: replace last_declared_dis = last_declared_dis[_N] if missing(last_declared_dis)
 
 	* Calculate change_status based on first and last declarations
-	gen change_status = cond(first_declared_dis == last_declared_dis, 0, ///
-		cond(first_declared_dis == 0 & last_declared_dis == 1, 1, ///
-		cond(first_declared_dis == 1 & last_declared_dis == 0, 2, ///
-		cond(first_declared_dis == 0 & last_declared_dis == 2, 3, ///
-		cond(first_declared_dis == 2 & last_declared_dis == 0, 4, ///
-		cond(first_declared_dis == 1 & last_declared_dis == 2, 5, ///
-		cond(first_declared_dis == 2 & last_declared_dis == 1, 6, .)))))))
+		gen change_status = cond(first_declared_dis == last_declared_dis, 0, ///
+			cond(first_declared_dis == 0 & last_declared_dis == 1, 1, ///
+			cond(first_declared_dis == 1 & last_declared_dis == 0, 2, ///
+			cond(first_declared_dis == 0 & last_declared_dis == 2, 3, ///
+			cond(first_declared_dis == 2 & last_declared_dis == 0, 4, ///
+			cond(first_declared_dis == 1 & last_declared_dis == 2, 5, ///
+			cond(first_declared_dis == 2 & last_declared_dis == 1, 6, .)))))))
 
 	* Propagate the change_status to all observations for each student
 		bysort studentid (declared_date id): replace change_status = change_status[1] if missing(change_status)
