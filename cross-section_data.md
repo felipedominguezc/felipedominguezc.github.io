@@ -1,5 +1,7 @@
 Cross-Sectional Survey Data Analysis with Weights
 
+This .do file showcases a robust application of cross-sectional survey data analysis by first setting up a complex survey design using primary sampling units, weights, and strata. It then computes diabetes type distributions for various subpopulations—including overall, elderly (65+), obese, and elderly-obese—using both group and population-based tabulations with variance estimations. The script further constructs a composite diabetes prevalence variable by integrating diagnostic criteria with age limits, and employs a loop to extract and post estimates by year for comprehensive trend analysis. Finally, it generates a multi-line graph to visualize these trends over time, marking methodological shifts, and concludes with additional demographic breakdowns using weighted survey tabulations.
+
 ```stata
 
 	set more 1
