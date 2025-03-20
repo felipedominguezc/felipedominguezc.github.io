@@ -1,5 +1,7 @@
 Graphs Example
 
+This .do file begins by setting the working directory and loading the revised dataset. It then renames key variables for clarity and produces a series of descriptive bar graphs. The script first generates mean bar graphs for psychological outcomes (Perceived Risk, Efficacy, Trust) by treatment group (Control, Directive, Music), followed by bar graphs that display the summed frequency of various emotion indicators. Finally, it converts behavioral outcome proportions to percentages and plots these outcomes as mean bar graphs by treatment, ultimately combining related graphs for cohesive visual presentations. This approach effectively communicates comparative study results through well-structured and visually appealing charts.
+
 ```stata
 
 ***********************************************************************************************************************************************
