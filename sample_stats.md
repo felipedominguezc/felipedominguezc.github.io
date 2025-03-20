@@ -11,29 +11,29 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 
 **TABLE STATS**
 
-   //mean and SD for experience//
+*mean and SD for experience*
    
       sum experience if treatment == 0 & experience != . //control//
       sum experience if treatment == 1 & experience != . //directive//
       sum experience if treatment == 2 & experience != . //Music//
       sum experience if experience !=. //all/
    
-   //Proportions Gender //
+*Proportions Gender*
    
-      tab gender if treatment == 0 & experience != . //control//
-      tab gender if treatment == 1 & experience != . //directive//
-      tab gender if treatment == 2 & experience != . //Music//
-      tab gender if experience !=. //all/
+   tab gender if treatment == 0 & experience != . //control//
+   tab gender if treatment == 1 & experience != . //directive//
+   tab gender if treatment == 2 & experience != . //Music//
+   tab gender if experience !=. //all/
    
-   //Proportions Country //
+*Proportions Country*
    
-      tab country if treatment == 0 & experience != . //control//
-      tab country if treatment == 1 & experience != . //directive//
-      tab country if treatment == 2 & experience != . //Music//
-      tab country if experience !=. //all/
+   tab country if treatment == 0 & experience != . //control//
+   tab country if treatment == 1 & experience != . //directive//
+   tab country if treatment == 2 & experience != . //Music//
+   tab country if experience !=. //all/
 
 
-**Proportions Behavioral outcomes**
+*Proportions Behavioral outcomes*
 
    tab makeplan if treatment == 0 & experience != . //control//
    tab makeplan if treatment == 1 & experience != . //directive//
@@ -49,8 +49,6 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
    tab share if treatment == 1 & experience != . //directive//
    tab share if treatment == 2 & experience != . //Music//
    tab share if experience !=. //all/
-   
-   
    
    tab intention if treatment == 0 & experience != . //control//
    tab intention if treatment == 1 & experience != . //directive//
@@ -69,7 +67,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
    tab subscribe if experience !=. //all/
 
 
-**Psychological outcomes**
+*Psychological outcomes*
 
    sum prisk if treatment == 0 & experience != . //control//
    sum prisk if treatment == 1 & experience != . //directive//
@@ -129,7 +127,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 
 
 
-**Mediator Transport in other do file**
+*Mediator Transport in other do file*
 
    sum transport if treatment == 0 //control//
    sum transport if treatment == 1 //directive//
