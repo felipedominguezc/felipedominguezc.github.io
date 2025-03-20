@@ -7,7 +7,7 @@ The following links include extracts from .do files I have done in the past year
 ## My Stata Experience:
 
 Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
-- [Basic Raw Data Handling](sample_cleanup.html)
+- [Basic Raw Data Handling](sample_cleanup.html) - **Robust Stata script for cleaning and recoding raw emotional and survey data, generating binary indicators and composite scales, and conducting preliminary descriptive analyses in the Hurricanes & Music study.**
 - [Basic Data Visualization](sample_graphs.html) - **Descriptive Stata graphing that visualizes psychological, emotional, and behavioral outcomes across experimental treatment groups in the Hurricanes & Music study.**
 - [Basic Summary Statistics](sample_stats.html) - **Baseline summary statistics script for the Hurricanes & Music study, computing descriptive measures (means, standard deviations, and proportions) across treatment groups for demographic, behavioral, and psychological outcomes.**
 
