@@ -2,13 +2,6 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 This .do file expertly processes CPS data by first setting up the workspace and defining necessary labels and variables, then generates weighted indicators for adult status and labor force participation. It leverages conditional statements and looping constructs to create and analyze age groups, calculating both overall and gender-specific LFPR across the years 1999 and 2024. The script further demonstrates proficiency in data transformation, aggregation (including reweighting based on 1999 age shares), and visualization by generating comprehensive bar graphs to illustrate trends, making it an excellent exemplar of advanced data manipulation and analytical reporting in Stata.
 
-
-```stata
-
-Below is an enhanced markdown section for your GitHub page that showcases your CPS Data with p-Weight Aggregation for LFPR Analysis .do file. It includes clear headers, descriptive text, and a formatted code block to highlight your work:
-
----
-
 ## Advanced: CPS Data with p-Weight Aggregation for LFPR Analysis
 
 **Proficiency Level:** Advanced
@@ -22,7 +15,10 @@ This Stata script demonstrates advanced data manipulation techniques such as wei
 - **Dynamic Recoding:** Creates age groups using conditional statements and labels them with meaningful categories.
 - **Data Visualization:** Generates bar graphs to compare LFPR by gender and overall, facilitating a clear interpretation of trends.
 
----
+
+```stata
+
+
 
 **Stata Code:**
 
@@ -185,6 +181,3 @@ display "Reweighted 2024 LFPR (if age shares stayed at 1999 levels): " ///
 **Insights:**  
 This script exemplifies advanced Stata programming by dynamically constructing age groups, applying weighted calculations, and generating comprehensive visualizations. The use of loops, conditional logic, and aggregate functions reflects a sophisticated approach to labor force analysis that is both efficient and scalable.
 
----
-
-Feel free to adjust the styling or commentary as needed to best reflect your skills and project details on your GitHub page!
