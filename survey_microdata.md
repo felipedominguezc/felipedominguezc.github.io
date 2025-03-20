@@ -1,5 +1,7 @@
 Survey Panel Data
 
+This .do file orchestrates a multifaceted survey panel data analysis workflow. In Part 1, it meticulously processes multiple datasets—assets, depression, and demographics—by verifying unique identifiers, cleaning and imputing missing asset values using median calculations across asset types, and aggregating data at the household-wave level. It further computes the Kessler depression score using several mental health indicators, categorizes depression severity, and carefully merges the datasets while checking for systematic missingness. In Part 2, the script explores the relationship between household wealth and depression through descriptive statistics, graphical visualizations (histograms and scatter plots with linear fits), and regression models. Additionally, it assesses the impact of treatment interventions across different waves and by gender, showcasing advanced data handling, merging techniques, and inferential analysis in Stata.
+
 ```stata
 
 ************************************************************************************************************************************************
