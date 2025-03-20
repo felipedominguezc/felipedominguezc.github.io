@@ -2,7 +2,7 @@ Graphs Example
 
 ```stata
 
-*******************************************************
+***********************************************************************************************************************************************
 * FILE:           Hurricanes_Music_Graphs.do
 * AUTHOR:         FDC
 * CREATED:        2025-03-19
@@ -13,22 +13,30 @@ Graphs Example
 * OUTPUT:         Combined graphs displayed in Stata; saved graph names for export
 * DEPENDENCIES:   None (uses built-in Stata commands)
 
-*******************************************************
+***********************************************************************************************************************************************
 
-********** SECTION 1: SETUP **********
+
+
+**************************************************************************************************
+* SECTION 1: SETUP
+**************************************************************************************************
 
     cd "/Users/felipedominguez/Desktop/Research_Assistant/Hurricanes & music "
     use "2024-05-23 - revised dataset2.dta", clear
 
-********** SECTION 2: VARIABLE RENAMING **********
+**************************************************************************************************
+* SECTION 2: VARIABLE RENAMING
+**************************************************************************************************
 
     rename prisk PerceivedRisk
     rename efficacy Efficacy
     rename trust Trust
 
-********** SECTION 3: PSYCHOLOGICAL OUTCOMES GRAPHS **********
+**************************************************************************************************
+*SECTION 3:PSYCHOLOGICAL OUTCOMES GRAPHS
+**************************************************************************************************
 
-* Mean bar graphs of Perceived Risk, Efficacy, Trust by treatment condition
+*Mean bar graphs of Perceived Risk, Efficacy, Trust by treatment condition
 
     foreach grp in 0 1 2 {
         graph bar (mean) PerceivedRisk Efficacy Trust if treatment==`grp' & experience!=., ///
@@ -39,9 +47,11 @@ Graphs Example
     }
     graph combine psgraph1 psgraph2 psgraph3, name(ps_all, replace)
 
-********** SECTION 4: EMOTION FREQUENCY GRAPHS **********
+**************************************************************************************************
+* SECTION 4: EMOTION FREQUENCY GRAPHS
+**************************************************************************************************
 
-* Bar graphs of summed emotion indicators by treatment condition
+*Bar graphs of summed emotion indicators by treatment condition
 
     foreach grp in 0 1 2 {
         graph bar (sum) Happiness Worry Joy Fear Pride Anxiety Hope Safety Other if treatment==`grp' & experience!=., ///
@@ -52,15 +62,17 @@ Graphs Example
     }
     graph combine emotion1 emotion2 emotion3, name(emotions_all, replace)
 
-********** SECTION 5: BEHAVIORAL OUTCOMES GRAPHS **********
+**************************************************************************************************
+* SECTION 5: BEHAVIORAL OUTCOMES GRAPHS
+**************************************************************************************************
 
-* Convert proportions to percentages
+*Convert proportions to percentages
 
     foreach var in makeplan reminder share subscribe {
         gen `=upper(substr("`var'",1,1))'+substr("`var'",2,. ) = `var'*100
     }
 
-* Mean bar graphs of behavioral outcomes
+*Mean bar graphs of behavioral outcomes
 
     foreach grp in 0 1 2 {
         graph bar (mean) Makeplan Reminder Share Subscribe if treatment==`grp' & experience!=., ///
