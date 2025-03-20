@@ -13,10 +13,10 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 
 *mean and SD for experience*
    
-      sum experience if treatment == 0 & experience != . //control//
-      sum experience if treatment == 1 & experience != . //directive//
-      sum experience if treatment == 2 & experience != . //Music//
-      sum experience if experience !=. //all/
+   sum experience if treatment == 0 & experience != . //control//
+   sum experience if treatment == 1 & experience != . //directive//
+   sum experience if treatment == 2 & experience != . //Music//
+   sum experience if experience !=. //all/
    
 *Proportions Gender*
    
