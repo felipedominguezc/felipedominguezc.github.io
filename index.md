@@ -22,7 +22,7 @@ Working with different types of data
 
 
 Independent Research
-- [Basic: Chronic Malnutrition & Marital Status](econometrics_final.html)
+- [Basic: Chronic Malnutrition & Marital Status](econometrics_final.html) - **Stata script for cleaning, constructing, and analyzing household survey microdata to assess the impact of maternal marital status and household resources on child chronic malnutrition.**
 - [Available in in PDF](Econometric research sample.pdf)
 
 ## My Opinion Piece on the IMF in Argentina
