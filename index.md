@@ -15,7 +15,7 @@ Inclusion for Disabled Students at LSE
 - [Basic Preliminary Data Analysis](basis_analysis.html)
 
 Working with different types of data
-- [Intermediate: CPS Weighted Analysis](CPS_data.html)
+- [Intermediate: CPS Weighted Analysis](CPS_data.html) - **Advanced Stata scripting showcasing weighted aggregations, loop-driven age-group analysis, and dynamic visualizations for LFPR research.**
 - [Intermediate: Survey Microdata](survey_microdata.html)
 - [Intermediate: Complex Cross-Sectional Survey Data](cross-section_data.html)
 - [Advanced: Longitudinal Data & RCT](longitudinal_data.html)
