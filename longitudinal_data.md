@@ -8,14 +8,14 @@ Experimental Data Management
 /******************************************************************************************************************************************
 
 Author: Felipe Dominguez Cornejo
-U Chicago Booth School of Business
-Data Task for RA position with Professors Pope & Dean
+
+Data Task for RA position
 
 *********************************************************************************************************************************************/
 
 	log using "/Users/felipedominguez/Desktop/Jobs & Apps/U Chicago/Profs. Dean & Pope/Data task/Stata Files/FDC_data_task.txt", replace
 
-/******************************************************************************************************
+*********************************************************************************************************************************************
 	Why did I write this code?
 		This is my coed for the data task for an RA position with Professor Dean and Professor Pope at 
 		Chicago Booth. They focus on behavioral economics.
@@ -33,7 +33,7 @@ Data Task for RA position with Professors Pope & Dean
 		Q1: I chose to use only the primary respondent because it provides a clear one-to-one comparison of guardian characteristics across treatment groups, under the assumption that the primary respondent's information accurately represents the overall guardian profile and is most relevant for the child's outcomes, thereby reducing complexity and minimizing measurement error.
 		Hours worked outliers: Because less than 2% of observations exceed a plausible upper bound (112>hpw), recoding these outlier values as missing most cleanly preserves the validity of the baseline balance analysis while only marginally reducing sample size.
 	
-******************************************************************************************************/
+**********************************************************************************************************************************************/
 	
 *** Creating Directories ***
 
@@ -56,11 +56,11 @@ Data Task for RA position with Professors Pope & Dean
 	global subsize "size(medsmall)" //axis titles size medsmall
 	global labsize "size(small)" //axis labels size small
 
-/****************************************************************
+***********************************************************************************************************************************************
 
-Dataset 1: Childdata
+* Dataset 1: Childdata
 
-*****************************************************************/
+***********************************************************************************************************************************************
 
 	import delimited "$mainpath/data/childdata.csv", clear //import childata  from .csv file
 
@@ -112,29 +112,30 @@ Dataset 1: Childdata
 	des 
 
 
-/****************************************************************
+************************************************************************************************************************************************
 
-Dataset 2: guardian data
+* Dataset 2: guardian data
 
-*****************************************************************/
+************************************************************************************************************************************************
 
 
 	import delimited "$mainpath/data/guardiandata.csv", clear // Import the guardian data CSV file
 
 
-/* --- Recast non-string variables ---*/
+*Recast non-string variables*
+
 	recast long id_child, force
 	recast byte endline, force
 	recast byte respondent, force
 	recast double hoursworked, force
 	recast float edu, force
 
-/* --- Convert string variables to numeric ---*/
+*Convert string variables to numeric*
 
 	replace prim_type = lower(prim_type)
 
 
-/* Create a new numeric variable from prim_type */
+*Create a new numeric variable from prim_type*
 
 	gen prim_type_num = . //missing values already marked as missing values 
 	replace prim_type_num = 1 if prim_type == "private"
@@ -144,7 +145,7 @@ Dataset 2: guardian data
 	recast byte prim_type, force
 
 
-/* For gender */
+*For gender*
 
 	replace gender = lower(gender)
 	gen gender_num = .
@@ -154,7 +155,7 @@ Dataset 2: guardian data
 	drop gender
 	rename gender_num gender
 
-***Labelling
+*Labelling*
 
 	label define prim_type_lab  1 "Private" 2 "Public"
 	label values prim_type prim_type_lab
@@ -173,46 +174,45 @@ Dataset 2: guardian data
 	replace hoursworked = . if hoursworked > 112 //Allows for a max of 16 hours a day, making it more realistic
 	count if missing(hoursworked)
 
-*** Save the formatted data as a .dta file
+**Save the formatted data as a .dta file**
 
 	save "$mainpath/data/guardiandata.dta", replace
 
 	codebook //check its the same
 	des
 
-/****************************************************************
+***********************************************************************************************************************************************
 
-Dataset 3: Merging child and guardian data
+* Dataset 3: Merging child and guardian data
 
-*****************************************************************/
+************************************************************************************************************************************************
 
-*** Open the child data (which has all the child variables)
+**Open the child data (which has all the child variables)**
 
 	use "$mainpath/data/childdata.dta", clear
 	sort id_child endline
 
-*** Merge the guardian data (which has been formatted according to the codebook)
+**Merge the guardian data (which has been formatted according to the codebook)**
 
 	merge 1:m id_child endline using "$mainpath/data/guardiandata.dta"
 
-*** Check the merge result
+	*** Check the merge result
 
 	tab _merge //merge worked 
 	drop _merge
 
 	save "$mainpath/data/combined.dta", replace
 
-/******************************************************************************************************
+************************************************************************************************************************************************
 
-Question 1
+* Question 1
 
-******************************************************************************************************/
+************************************************************************************************************************************************
 
 	use "$mainpath/data/combined.dta", clear
 
-/*-----------------------------------------
 * Baseline Balance Table 
-*-----------------------------------------*/
+
 
 		preserve
 	    * Restrict to baseline observations
@@ -240,11 +240,11 @@ Question 1
 		*Raw table estimates are exported to a .csv file where I just have to format the table
 	restore
 
-/******************************************************************************************************
+************************************************************************************************************************************************
 
-Question 2
+* Question 2
 
-******************************************************************************************************/
+************************************************************************************************************************************************
 
 	preserve 
 	keep if endline ==0 //more obs with complete info
@@ -263,11 +263,11 @@ Question 2
 	restore
 
 
-/******************************************************************************************************
+************************************************************************************************************************************************
 
 Question 3
 
-******************************************************************************************************/
+************************************************************************************************************************************************
 
 ***
 	* 1) Baseline & endline summary by treatment
@@ -306,11 +306,11 @@ Question 3
 		restore
 	
 
-/******************************************************************************************************
+************************************************************************************************************************************************
 
-Question 4
+* Question 4
 
-******************************************************************************************************/
+************************************************************************************************************************************************
 
 ***
 	use "$mainpath/data/childdata.dta", clear
@@ -342,25 +342,25 @@ Question 4
 		    gen z_`var' = (c_totalscore_`var' - `m`var'')/`sd`var''
 		}
 
-* 4) Build one index per domain
+	* 4) Build one index per domain
+	
+		foreach dom of local domains {
+		    local vars = "`dom'"
+		    local list
+		    foreach v of local `dom' {
+		        local list `list' z_`v'
+		    }
+		    egen idx_`dom' = rowmean(`list')
+		    label variable idx_`dom' "`dom' summary index base"
+		}
+		drop z_* //get rid of intermediate variables
+	
+		tempfile temp_baseline_scores
+		save `temp_baseline_scores', replace
+	
+		restore
 
-	foreach dom of local domains {
-	    local vars = "`dom'"
-	    local list
-	    foreach v of local `dom' {
-	        local list `list' z_`v'
-	    }
-	    egen idx_`dom' = rowmean(`list')
-	    label variable idx_`dom' "`dom' summary index base"
-	}
-	drop z_* //get rid of intermediate variables
-
-	tempfile temp_baseline_scores
-	save `temp_baseline_scores', replace
-
-	restore
-
-*** Repeat procedure for endline ***
+**Repeat procedure for endline**
 
 	keep if endline == 1
 
@@ -403,7 +403,7 @@ Question 4
 		tempfile temp_endline_scores
 		save `temp_endline_scores', replace
 
-***Reload full dataset
+**Reload full dataset**
 
 	use "$mainpath/data/combined.dta", clear
 
@@ -422,11 +422,10 @@ Question 4
 		merge m:1 id_child using `temp_endline_scores'
 		drop _merge
 
-/*-----------------------------------------
 
 * Prepare dataset for regression
 
-*-----------------------------------------*/
+
 
 ***
 	* Create mother_edu only for female guardians
@@ -452,28 +451,27 @@ Question 4
 		keep if endline == 1  
 		keep if gender == 1
 
-/*-----------------------------------------
+
 
 * Perform the regression
 
-*-----------------------------------------*/
 
-*** Run regressions for each index
-
-	foreach idx in Reasoning Language Memory Numeracy Motor {
-	    regress idx_`idx' treatment  base_age mother_edu idx_`idx'_base
-	    eststo `idx'
-	}
-
-*** Export regression results
-
-	esttab Reasoning Language Memory Numeracy Motor using "$output/treatment_effects.csv", ///
-	    replace se star(* 0.10 ** 0.05 *** 0.01) ///
-	    label title("Treatment Effects on Cognitive and Motor Indices") ///
-	    coeflabels(treatment "Treatment Effect") ///
-	    stats(r2 N, labels("R-squared" "Observations"))
-	// Exported as .csv ready to format
-	log close
+	*** Run regressions for each index
 	
+		foreach idx in Reasoning Language Memory Numeracy Motor {
+		    regress idx_`idx' treatment  base_age mother_edu idx_`idx'_base
+		    eststo `idx'
+		}
+	
+	*** Export regression results
+	
+		esttab Reasoning Language Memory Numeracy Motor using "$output/treatment_effects.csv", ///
+		    replace se star(* 0.10 ** 0.05 *** 0.01) ///
+		    label title("Treatment Effects on Cognitive and Motor Indices") ///
+		    coeflabels(treatment "Treatment Effect") ///
+		    stats(r2 N, labels("R-squared" "Observations"))
+		// Exported as .csv ready to format
+		log close
+		
 	
 
