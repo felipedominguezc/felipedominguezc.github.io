@@ -5,49 +5,50 @@ Experimental Data Management
 	set more 1
 	capture log close
 
-/******************************************************************************************************************************************
+******************************************************************************************************************************************
 
-Author: Felipe Dominguez Cornejo
+* Author: Felipe Dominguez Cornejo
 
-Data Task for RA position
+* Data Task for RA position
 
-*********************************************************************************************************************************************/
+*********************************************************************************************************************************************
 
 	log using "/Users/felipedominguez/Desktop/Jobs & Apps/U Chicago/Profs. Dean & Pope/Data task/Stata Files/FDC_data_task.txt", replace
 
+
 *********************************************************************************************************************************************
-	Why did I write this code?
+	* **Why did I write this code?**
 		This is my coed for the data task for an RA position with Professor Dean and Professor Pope at 
 		Chicago Booth. They focus on behavioral economics.
 	
-	Table of Contents:
+	* **Table of Contents:**
 		Each question has its own section in the code. I use preserve/restore commdands instead of 
 		saving new .dta files
 	
-	Inputs/Outputs:
+	* **Inputs/Outputs:**
 		This code reads in the two .csv files, converts them into .dta files (which are used throughout). 
 		Outputs include graphs and tables needed to answer the questions
 	
-	Technical information/general assumptions:
+	* **Technical information/general assumptions:**
 		Test scores are correct and free of errors-in-variables
 		Q1: I chose to use only the primary respondent because it provides a clear one-to-one comparison of guardian characteristics across treatment groups, under the assumption that the primary respondent's information accurately represents the overall guardian profile and is most relevant for the child's outcomes, thereby reducing complexity and minimizing measurement error.
 		Hours worked outliers: Because less than 2% of observations exceed a plausible upper bound (112>hpw), recoding these outlier values as missing most cleanly preserves the validity of the baseline balance analysis while only marginally reducing sample size.
 	
-**********************************************************************************************************************************************/
+**********************************************************************************************************************************************
 	
-*** Creating Directories ***
+*Creating Directories*
 
 	global desktop "/Users/felipedominguez/Desktop" //desktop directory on my mac. change to your home directory
 	global mainpath "$desktop/Jobs & Apps/U Chicago/Profs. Dean & Pope/Data task"
 		//change to where files are stored. subfolders are data, graphs, Stata Files
 	global output "$mainpath/Graphs" //change to where you want graphs to be saved
 
-*** Installing Packages ***
+*Installing Packages*
 
 	ssc install tabstatmat, replace
 	ssc install estout, replace
 
-*** Graphs Settings ***
+*Graphs Settings**
 
 	// set graphics on
 	 set graphics off //toggle
@@ -56,9 +57,10 @@ Data Task for RA position
 	global subsize "size(medsmall)" //axis titles size medsmall
 	global labsize "size(small)" //axis labels size small
 
+
 ***********************************************************************************************************************************************
 
-* Dataset 1: Childdata
+* **Dataset 1: Childdata**
 
 ***********************************************************************************************************************************************
 
@@ -114,7 +116,7 @@ Data Task for RA position
 
 ************************************************************************************************************************************************
 
-* Dataset 2: guardian data
+* **Dataset 2: guardian data**
 
 ************************************************************************************************************************************************
 
@@ -183,16 +185,16 @@ Data Task for RA position
 
 ***********************************************************************************************************************************************
 
-* Dataset 3: Merging child and guardian data
+* **Dataset 3: Merging child and guardian data**
 
 ************************************************************************************************************************************************
 
-**Open the child data (which has all the child variables)**
+*Open the child data (which has all the child variables)*
 
 	use "$mainpath/data/childdata.dta", clear
 	sort id_child endline
 
-**Merge the guardian data (which has been formatted according to the codebook)**
+*Merge the guardian data (which has been formatted according to the codebook)*
 
 	merge 1:m id_child endline using "$mainpath/data/guardiandata.dta"
 
@@ -205,7 +207,7 @@ Data Task for RA position
 
 ************************************************************************************************************************************************
 
-* Question 1
+* **Question 1**
 
 ************************************************************************************************************************************************
 
@@ -242,7 +244,7 @@ Data Task for RA position
 
 ************************************************************************************************************************************************
 
-* Question 2
+* **Question 2**
 
 ************************************************************************************************************************************************
 
@@ -265,7 +267,7 @@ Data Task for RA position
 
 ************************************************************************************************************************************************
 
-Question 3
+* **Question 3**
 
 ************************************************************************************************************************************************
 
@@ -308,7 +310,7 @@ Question 3
 
 ************************************************************************************************************************************************
 
-* Question 4
+* **Question 4**
 
 ************************************************************************************************************************************************
 
@@ -360,7 +362,7 @@ Question 3
 	
 		restore
 
-**Repeat procedure for endline**
+*Repeat procedure for endline*
 
 	keep if endline == 1
 
@@ -403,7 +405,7 @@ Question 3
 		tempfile temp_endline_scores
 		save `temp_endline_scores', replace
 
-**Reload full dataset**
+*Reload full dataset*
 
 	use "$mainpath/data/combined.dta", clear
 
@@ -424,8 +426,6 @@ Question 3
 
 
 * Prepare dataset for regression
-
-
 
 ***
 	* Create mother_edu only for female guardians
@@ -455,15 +455,15 @@ Question 3
 
 * Perform the regression
 
-
-	*** Run regressions for each index
+***
+	*Run regressions for each index*
 	
 		foreach idx in Reasoning Language Memory Numeracy Motor {
 		    regress idx_`idx' treatment  base_age mother_edu idx_`idx'_base
 		    eststo `idx'
 		}
 	
-	*** Export regression results
+	*Export regression results*
 	
 		esttab Reasoning Language Memory Numeracy Motor using "$output/treatment_effects.csv", ///
 		    replace se star(* 0.10 ** 0.05 *** 0.01) ///
