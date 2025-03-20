@@ -1,5 +1,7 @@
 # Data Cleaning Example
 
+This .do file meticulously processes raw data from the Hurricanes & Music study by setting up the working directory and loading the dataset, then splitting string variables into numeric components. It creates binary dummy variables for categorical responses across multiple survey sections (e.g., emotion indicators, plan for home, shelter items, kit items) and recodes open-ended emotion responses into standardized binary variables for various emotional states. The script further aggregates these into composite emotion scales (positive, negative, and other), and performs a range of descriptive analyses—including chi-square tests, t-tests, and Kruskal-Wallis tests—to assess relationships among treatment conditions, behavioral outcomes, and demographics. Finally, it ensures proper variable labeling and handles missing data by recoding default responses, effectively preparing the cleaned dataset for subsequent advanced analyses.
+
 
 ```stata
 
