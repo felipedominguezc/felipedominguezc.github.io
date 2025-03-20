@@ -1,5 +1,7 @@
 Household Survey microdata
 
+This .do file meticulously processes Ecuadorian household survey panel data by first verifying data integrity and cleaning raw inputs. It constructs critical variables—including maternal marital status, caregiving responsibilities, and a range of household and maternal controls (e.g., education, income, housing quality, and water sanitation)—by propagating key attributes within households. The script then generates summary statistics and visualizations, such as bar graphs depicting chronic malnutrition by maternal marital status, before sequentially running robust OLS regression models. These models incrementally incorporate baseline measures, socioeconomic indicators, and interaction terms (e.g., between marital status and household income or food insecurity) to explore their joint effects on child chronic malnutrition outcomes.
+
 ```stata
 
 ************************************************************************************************************************************************
