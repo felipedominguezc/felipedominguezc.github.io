@@ -2,18 +2,18 @@ Cross-Sectional Survey Data Analysis with Weights
 
 ```stata
 
-set more 1
+	set more 1
 
-/******************************************************************************************************************************************* 
+*********************************************************************************************************************************************** 
 
-AEI Economic Policy Studies
+* AEI Economic Policy Studies
 
-Research Assistant Candidate Data Task
-Author: Felipe Dominguez Cornejo
+* Research Assistant Candidate Data Task
+* Author: Felipe Dominguez Cornejo
 
-**********************************************************************************************************************************************/
+************************************************************************************************************************************************
 
-/*Enter path to FOLDER below. Make sure to include quotation marks and avoid any unnecessary "\" */
+*Enter path to FOLDER below. Make sure to include quotation marks and avoid any unnecessary "\"*
 
 	cd "/Users/felipedominguez/Desktop/Fall '24/Jobs & Apps/AEI" 
 	use nhis_00004.dta, clear /*Enter data name here */
