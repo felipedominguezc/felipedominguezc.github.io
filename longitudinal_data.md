@@ -1,5 +1,7 @@
 Experimental Data Management
 
+This .do file demonstrates a robust experimental data management strategy designed for an RA application. It begins by importing and cleaning two CSV datasets—child and guardian data—by correctly recasting variable types, applying informative labels, and merging them into a combined dataset. The script then builds baseline balance tables using estpost and esttab, calculates disagreement indicators between guardian responses, and performs a difference‑in‑differences analysis to capture treatment effects from baseline to endline. Furthermore, it standardizes multiple test scores into z-scores and aggregates them into domain-specific indices (e.g., Reasoning, Language, Memory, Numeracy, Motor) before estimating treatment effects via regression, showcasing a detailed and methodical approach to experimental analysis in Stata.
+
 ```stata
 
 	set more 1
