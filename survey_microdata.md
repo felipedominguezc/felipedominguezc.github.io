@@ -1,25 +1,29 @@
 Survey Panel Data
+
 ```stata
-/*****************************************************************************************
-GPRL Data Task
 
-Author: Felipe Dominguez Cornejo
-March 6, 2025
+************************************************************************************************************************************************
 
-*****************************************************************************************/
+* GPRL Data Task
+
+* Author: Felipe Dominguez Cornejo
+* March 6, 2025
+
+************************************************************************************************************************************************
 
 	set more 1
 	capture log close
 	cd "/Users/felipedominguez/Desktop/Fall '24/Jobs & Apps/Northwestern/2. GPRL_StataAssessment_2025/data"
 	log using data_task_GPRL.txt, replace
 
-/*******************************************
+*******************************************
 
-PART 1
+* PART 1
 
-********************************************/
+********************************************
 
-**# Q1 Unique idenifiers
+**Q1 Unique idenifiers**
+
 	use assets.dta, clear
 	 isid hhid wave Asset_Type InstanceNumber //no errors
 	
@@ -29,9 +33,10 @@ PART 1
 	use demographics.dta, clear
 	 isid hhid wave hhmid //no errors
 	 
-**#Q2 Proxy for household size
+**Q2 Proxy for household size**
 
-//Clean dataset
+	//Clean dataset
+
 	keep if relationship <= 2 //treatment is meant for household head and spouse, so I restrict data to those individuals
 	replace age = . if age < 18 | age > 100 //clean age variable to more realistic ages
 	replace agemarried = . if agemarried == .d | agemarried <18
@@ -45,7 +50,8 @@ PART 1
 	 sum hhsize if wave ==1
 	drop n_members //drop intermediate variable
 
-//Check with different approach: 
+	//Check with different approach:
+
 	bysort hhid wave: egen wave_size_by_id = max(hhmid)
 	bysort hhid: egen wave1_size = max(cond(wave==1, wave_size_by_id, .))
 	 sum wave1_size //same results
@@ -56,7 +62,7 @@ PART 1
 	tempfile temp_demographics
 	save `temp_demographics', replace
 
-**# Q3: Impute missing values in currentvalue
+**Q3: Impute missing values in currentvalue**
 
 	use assets.dta, clear
 	
@@ -74,11 +80,11 @@ PART 1
 	sort hhid wave Asset_Type InstanceNumber //return to original sorting
 	drop mdn* //drop intermediate variables 
 
-**# Q4: Total monetary value
+**Q4: Total monetary value**
 
 	gen total_currentvalue = currentvalue*quantity
 
-**# Q5: Dataset at the household-wave level
+**Q5: Dataset at the household-wave level**
 
 	//Category-Specific Value Variables
 
@@ -105,7 +111,7 @@ PART 1
 	save `temp_asset', replace
 
 
-**# Q6: Kessler Score
+**Q6: Kessler Score**
 
 	use depression.dta, clear
 	
@@ -134,7 +140,7 @@ PART 1
 	save `temp_depression', replace
 
 
-**# Q7: Combining datasets 
+**Q7: Combining datasets**
 
 	use "`temp_demographics'", clear
 	sort hhid hhmid wave
@@ -142,7 +148,7 @@ PART 1
 	merge 1:1 hhid hhmid wave using "`temp_depression'", keep(master match)
 	tab _merge //for about 4% of individuals, the depression variables are  missing 
 
-//Check for systematic vs random missing values for depression data
+	//Check for systematic vs random missing values for depression data
 
 	gen missing_depression = missing(kessler_score)
 	misstable summarize kessler_score
@@ -152,7 +158,7 @@ PART 1
 	
 	drop _merge
 
-//Merge resulting dataset with assets data
+	//Merge resulting dataset with assets data
 
 	sort hhid wave
 	merge m:1 hhid wave using "`temp_asset'", keep(master match)
@@ -176,16 +182,16 @@ PART 1
 
 
 
-/***************************************
+************************************************************************************************************************************************
 
 PART 2
 
-****************************************/
+************************************************************************************************************************************************
 
 	use combined.dta, clear
 
 
-**#Q1:Relationship between depression and household wealth
+**Q1:Relationship between depression and household wealth**
 
 	gen log_total_asset_value = ln(total_asset_value) 
 	gen log_tools_value = ln(value_tools)
@@ -202,26 +208,26 @@ PART 2
 	sum kessler_score total_asset_value age if kessler_score != 99
 
 
-//Histogram for Depression Scores with axis titles and reduced graph size
+	//Histogram for Depression Scores with axis titles and reduced graph size
 
 	histogram kessler_score if kessler_score != 99, percent title("Depression Scores") ///
 	    xtitle("Kessler Score") ytitle("Percentage") ///
 	    name(depression_hist, replace) xsize(4) ysize(3)
 
-//Histogram for Log Household Wealth with axis titles and reduced graph size
+	//Histogram for Log Household Wealth with axis titles and reduced graph size
 
 	histogram log_total_asset_value, percent title("Log Household Wealth") ///
 	    xtitle("Log Total Asset Value") ytitle("Percentage") ///
 	    name(wealth_hist, replace) xsize(4) ysize(3)
 
-//Combine the two graphs in two columns
+	//Combine the two graphs in two columns
 
 	graph combine depression_hist wealth_hist, title("Distributions in Wave 1") cols(1) ///
 		name(distributions, replace) ///
 		nodraw
 
 
-** Scatter + linear fit: Depression vs. Household Wealth
+	** Scatter + linear fit: Depression vs. Household Wealth
 
 	twoway ///
 	    (scatter kessler_score log_total_asset_value  if kessler_score != 99, ///
@@ -233,7 +239,8 @@ PART 2
 	    (lfit kessler_score log_total_asset_value, lcolor(red)), ///
 	    legend(off) name(scatter_wealth, replace)
 
-**Scatter + linear fit: Depression vs. Age
+	**Scatter + linear fit: Depression vs. Age
+
 	twoway ///
 	    (scatter kessler_score age if kessler_score != 99, ///
 	        msize(vsmall) mcolor(%40) ///
@@ -244,7 +251,8 @@ PART 2
 	    (lfit kessler_score age, lcolor(red)), ///
 	    name(scatter_age, replace)
 
-**Combine the two plots side by side
+	**Combine the two plots side by side
+
 	graph combine scatter_wealth scatter_age, ///
 	    title("Depression vs. Household Wealth and Age") ///
 	    cols(1) ///
@@ -253,40 +261,40 @@ PART 2
 
 
 
-// Compute correlation coefficient with significance tests
+	// Compute correlation coefficient with significance tests
 
 	pwcorr kessler_score log_total_asset_value ///
 		log_tools_value log_animals_value log_durables age, sig 
 
-//simple regression
+	//simple regression
 
 	reg kessler_score log_total_asset_value if kessler_score != 99, r
 	reg kessler_score log_total_asset_value age if kessler_score != 99, r
 	reg kessler_score log_durables if kessler_score != 99, r
 	reg kessler_score log_durables age if kessler_score != 99, r
 
-//Histogram of age 
+	//Histogram of age 
 
 	histogram age, percent title("Distribution of Age (Wave 1)") ///
 		name(age, replace) ///
 		nodraw
 
-//Simple regression
+	//Simple regression
 
 	reg kessler_score age if kessler_score != 99, r	
 
-**#Q2: Were the GT sessions effective?
+**Q2: Were the GT sessions effective?**
 
 	restore
 	keep if wave ==2 
 	
 	drop if missing(kessler_score)
 
-// Compare mean depression scores between treatment and control groups
+	// Compare mean depression scores between treatment and control groups
 
 	ttest kessler_score, by(treat_hh)
 
-// Run a simple regression to estimate the treatment effect
+	// Run a simple regression to estimate the treatment effect
 
 	reg kessler_score i.treat_hh, r
 	di "The adjusted R-squared is:" e(r2_a)
@@ -295,7 +303,7 @@ PART 2
 	reg kessler_score i.treat_hh age hhsize log_total_asset_value, r
 	di "The adjusted R-squared is:" e(r2_a)
 
-**#Q3: GT sessions by gender
+**Q3: GT sessions by gender**
 
 	gen woman = (gender ==5) //makes binary variable for woman
 	reg kessler_score i.woman##i.treat_hh, r
