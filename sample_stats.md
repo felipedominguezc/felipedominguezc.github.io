@@ -9,7 +9,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 
 *****************************************************************************************************************************
 
-*TABLE STATS
+**TABLE STATS**
 
    //mean and SD for experience//
    
@@ -33,7 +33,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
       tab country if experience !=. //all/
 
 
-*Proportions Behavioral outcomes
+**Proportions Behavioral outcomes**
 
    tab makeplan if treatment == 0 & experience != . //control//
    tab makeplan if treatment == 1 & experience != . //directive//
@@ -69,7 +69,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
    tab subscribe if experience !=. //all/
 
 
-*Psychological outcomes
+**Psychological outcomes**
 
    sum prisk if treatment == 0 & experience != . //control//
    sum prisk if treatment == 1 & experience != . //directive//
@@ -129,7 +129,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 
 
 
-*Mediator Transport in other do file
+**Mediator Transport in other do file**
 
    sum transport if treatment == 0 //control//
    sum transport if treatment == 1 //directive//
