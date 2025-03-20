@@ -2,14 +2,14 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 ```stata
 
-/***************************************************************************************************************
+************************************************************************************************************************************************
 
-Author: Felipe Dominguez Cornejo
+* Author: Felipe Dominguez Cornejo
 	This is a Data Task for a Pre-doc position at a top university where I moved on onto the next hiring process
 
-***************************************************************************************************************/
+************************************************************************************************************************************************
 
-/*Enter path to FOLDER below. Make sure to include quotation marks and avoid any unnecessary "\" */
+*Enter path to FOLDER below. Make sure to include quotation marks and avoid any unnecessary "\"*
 
 	cd "..."
 	use CPS_data.dta, clear /*Enter data name here */
@@ -29,7 +29,7 @@ Author: Felipe Dominguez Cornejo
 
 ***************************************************************************************************
 
-**# 1 LFPR by age Profile in 1999 & 2024
+* 1 LFPR by age Profile in 1999 & 2024
 
 ***************************************************************************************************
 
@@ -87,7 +87,7 @@ Author: Felipe Dominguez Cornejo
 
 ******************************************************************************
 
-*Graphs
+* Graphs
 
 ******************************************************************************
 
@@ -122,7 +122,7 @@ Author: Felipe Dominguez Cornejo
 
 *****************************************************************************************************
 
-**# 3 Overall LFPR by sex and year
+* 3 Overall LFPR by sex and year**
 
 *****************************************************************************************************
 
@@ -163,7 +163,7 @@ Author: Felipe Dominguez Cornejo
 
 *****************************************************************************************************
 
-**# 4 2024 Aggregate LFPR with 1999 age distribution
+* 4 2024 Aggregate LFPR with 1999 age distribution
 
 *****************************************************************************************************
 
