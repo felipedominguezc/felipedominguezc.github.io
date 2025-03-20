@@ -11,6 +11,7 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
   *Descriptive graphing that visualizes psychological, emotional, and behavioral outcomes across experimental treatment groups.*
 - **[Basic: Summary Statistics](sample_stats.html)**  
   *Baseline summary statistics script computing descriptive measures (means, standard deviations, and proportions) for demographic, behavioral, and psychological outcomes.*
+- **Paper: *Forthcoming* **
 
 ### Inclusion for Disabled Students at LSE
 - **[Basic Preliminary Data Analysis](basis_analysis.html)**  
