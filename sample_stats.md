@@ -1,36 +1,39 @@
 Summary Statistics Example. This was done may 2024, since then I have gained skills much more advanced, but this is a baseline.
 
 ```stata
-/**************************************************************************************************************************/
+
+****************************************************************************************************************************
 
    cd "/Users/felipedominguez/Desktop/Research_Assistant/Hurricanes & music " 
    use "2024-05-23 - revised dataset2.dta" , clear
 
-/*TABLE STATS*/
+*****************************************************************************************************************************
 
-//mean and SD for experience//
+*TABLE STATS
 
-   sum experience if treatment == 0 & experience != . //control//
-   sum experience if treatment == 1 & experience != . //directive//
-   sum experience if treatment == 2 & experience != . //Music//
-   sum experience if experience !=. //all/
+   //mean and SD for experience//
+   
+      sum experience if treatment == 0 & experience != . //control//
+      sum experience if treatment == 1 & experience != . //directive//
+      sum experience if treatment == 2 & experience != . //Music//
+      sum experience if experience !=. //all/
+   
+   //Proportions Gender //
+   
+      tab gender if treatment == 0 & experience != . //control//
+      tab gender if treatment == 1 & experience != . //directive//
+      tab gender if treatment == 2 & experience != . //Music//
+      tab gender if experience !=. //all/
+   
+   //Proportions Country //
+   
+      tab country if treatment == 0 & experience != . //control//
+      tab country if treatment == 1 & experience != . //directive//
+      tab country if treatment == 2 & experience != . //Music//
+      tab country if experience !=. //all/
 
-//Proportions Gender //
 
-   tab gender if treatment == 0 & experience != . //control//
-   tab gender if treatment == 1 & experience != . //directive//
-   tab gender if treatment == 2 & experience != . //Music//
-   tab gender if experience !=. //all/
-
-//Proportions Country //
-
-   tab country if treatment == 0 & experience != . //control//
-   tab country if treatment == 1 & experience != . //directive//
-   tab country if treatment == 2 & experience != . //Music//
-   tab country if experience !=. //all/
-
-
-//Proportions Behavioral outcomes//
+*Proportions Behavioral outcomes
 
    tab makeplan if treatment == 0 & experience != . //control//
    tab makeplan if treatment == 1 & experience != . //directive//
@@ -66,7 +69,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
    tab subscribe if experience !=. //all/
 
 
-//Psychological outcomes//
+*Psychological outcomes
 
    sum prisk if treatment == 0 & experience != . //control//
    sum prisk if treatment == 1 & experience != . //directive//
@@ -126,7 +129,7 @@ Summary Statistics Example. This was done may 2024, since then I have gained ski
 
 
 
-//Mediator Transport in other do file //
+*Mediator Transport in other do file
 
    sum transport if treatment == 0 //control//
    sum transport if treatment == 1 //directive//
