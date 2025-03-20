@@ -9,7 +9,7 @@ The following links include extracts from .do files I have done in the past year
 Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
 - [Basic Raw Data Handling](sample_cleanup.html)
 - [Basic Data Visualization](sample_graphs.html) - **Descriptive Stata graphing that visualizes psychological, emotional, and behavioral outcomes across experimental treatment groups in the Hurricanes & Music study.**
-- [Basic Summary Statistics](sample_stats.html)
+- [Basic Summary Statistics](sample_stats.html) - **Baseline summary statistics script for the Hurricanes & Music study, computing descriptive measures (means, standard deviations, and proportions) across treatment groups for demographic, behavioral, and psychological outcomes.**
 
 Inclusion for Disabled Students at LSE
 - [Basic Preliminary Data Analysis](basis_analysis.html)
