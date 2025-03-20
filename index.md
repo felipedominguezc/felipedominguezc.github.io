@@ -1,27 +1,28 @@
 # felipedominguezc.github.io
-Stata coding portfolio
+
+The following links include extracts from .do files I have done in the past year and a half. Some include coding techniques more advanced than others and they represent my abilities at different points in time. Any errors are mine alone. Some information has been removed for confidentiality. 
 
 ```markdown
 
 ## My Stata Experience:
 
 Hurricanes & Music Project with Dr. Ganga Shreedhar (LSE)
-- [Data Cleaning](sample_cleanup.html)
-- [Data Visualization](sample_graphs.html)
-- [Summary Statistics](sample_stats.html)
+- [Basic Raw Data Handling](sample_cleanup.html)
+- [Basic Data Visualization](sample_graphs.html)
+- [Basic Summary Statistics](sample_stats.html)
 
 Inclusion for Disabled Students at LSE
-- [Preliminary Data Analysis](basis_analysis.html)
+- [Basic Preliminary Data Analysis](basis_analysis.html)
 
 Working with different types of data
-- [Longitudinal Data from RCT](longitudinal_data.html)
-- [CPS Weighted Analysis](CPS_data.html)
-- [Survey Microdata](survey_microdata.html)
-- [Complex Cross-Sectional Survey Data](cross-section_data.html)
+- [Intermediate: CPS Weighted Analysis](CPS_data.html)
+- [Intermediate: Survey Microdata](survey_microdata.html)
+- [Intermediate: Complex Cross-Sectional Survey Data](cross-section_data.html)
+- [Advanced: Longitudinal Data & RCT](longitudinal_data.html)
 
 Independent Research
-- [Chronic Malnutrition & Marital Status](econometrics_final.html)
-- [Full Paper in PDF](Econometric research sample.pdf)
+- [Basic: Chronic Malnutrition & Marital Status](econometrics_final.html)
+- [Available in in PDF](Econometric research sample.pdf)
 
 ## My Opinion Piece on the IMF in Argentina
 - [Available in PDF](op-ed_writing sample.pdf)
