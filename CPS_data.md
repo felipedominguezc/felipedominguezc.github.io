@@ -5,7 +5,8 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 ************************************************************************************************************************************************
 
 * Author: Felipe Dominguez Cornejo
-	This is a Data Task for a Pre-doc position at a top university where I moved on onto the next hiring process
+
+* This is a Data Task for a Pre-doc position at a top university where I moved on onto the next hiring process
 
 ************************************************************************************************************************************************
 
@@ -19,7 +20,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 ****************************************************************************************
 
-**#Calculate LFPR by group with weights (Variables to be used for every question)
+*Calculate LFPR by group with weights (Variables to be used for every question)*
 
 	gen adult_w = (popstat == 1) * wtfinl //adult_civilian indicator weighted
 	gen in_lab_w = (labforce == 2) * wtfinl //adult civilian in labor force indicator weighted
@@ -29,11 +30,11 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 ***************************************************************************************************
 
-* 1 LFPR by age Profile in 1999 & 2024
+* **1 LFPR by age Profile in 1999 & 2024**
 
 ***************************************************************************************************
 
-*Create Age groups:
+*Create Age groups:*
 
 	gen age_group = cond(age >= 15 & age <= 19, 1, ///
 	    cond(age >= 20 & age <= 24, 2, ///
@@ -48,7 +49,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 
 
-*Overall LFPR by year and age_group
+*Overall LFPR by year and age_group*
 
 	local age_groups 1 2 3 4 5 6 7
 
@@ -67,7 +68,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 	label variable overall_lfpr6 "Overall LFPR for Ages 55-64"
 	label variable overall_lfpr7 "Overall LFPR for Ages 65+"
 
-*LFPR for each age_group by year, age_group, and sex
+*LFPR for each age_group by year, age_group, and sex*
 
 	foreach age in `age_groups' {
 	    by year age_group sex, sort: egen adult_civilian`age' = total(((popstat == 1) & (age_group == `age')) * wtfinl)
@@ -75,7 +76,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 	    gen lfpr`age' = (labor_force`age' / adult_civilian`age') * 100
 	}
 
-*Label LFPR variables for each age group
+*Label LFPR variables for each age group*
 
 	label variable lfpr1 "LFPR for Ages 15-19"
 	label variable lfpr2 "LFPR for Ages 20-24"
@@ -89,7 +90,6 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 * Graphs
 
-******************************************************************************
 
 	graph bar lfpr* if sex == 1, over(year) ///
 	    title("LFPR by Age Group, Men(1999 vs. 2024)") ///
@@ -122,7 +122,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 *****************************************************************************************************
 
-* 3 Overall LFPR by sex and year**
+* **3 Overall LFPR by sex and year**
 
 *****************************************************************************************************
 
@@ -163,7 +163,7 @@ CPS Data with p-Weight Aggregation for LFPR Analysis
 
 *****************************************************************************************************
 
-* 4 2024 Aggregate LFPR with 1999 age distribution
+* **4 2024 Aggregate LFPR with 1999 age distribution**
 
 *****************************************************************************************************
 
