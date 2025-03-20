@@ -16,10 +16,6 @@ This Stata script demonstrates advanced data manipulation techniques such as wei
 - **Data Visualization:** Generates bar graphs to compare LFPR by gender and overall, facilitating a clear interpretation of trends.
 
 
-```stata
-
-
-
 **Stata Code:**
 
 ```stata
