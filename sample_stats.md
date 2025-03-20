@@ -1,5 +1,8 @@
 Summary Statistics Example. This was done may 2024, since then I have gained skills much more advanced, but this is a baseline.
 
+This do file, created in May 2024, lays the groundwork for initial exploratory analysis by generating summary statistics for the Hurricanes & Music dataset. It calculates key descriptive measures for variables such as experience, gender, country, and various behavioral outcomes (e.g., makeplan, reminder, share, intention, subscribe) by treatment group (Control, Directive, Music), as well as summary statistics for psychological outcomes (e.g., perceived risk, efficacy, trust, happiness, joy, hope, safety, pride, worry, fear, anxiety). Additionally, it includes a section for summarizing a mediator variable (transport). Although more advanced techniques have been developed since then, this baseline script effectively showcases the fundamental data summarization skills used in early stages of research analysis.
+
+
 ```stata
 
 ****************************************************************************************************************************
