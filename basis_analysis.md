@@ -2,13 +2,12 @@ Administrative Data
 
 ```stata
 
-/*********************************************************************************************************************************************
+*********************************************************************************************************************************************
 
-Author: Felipe Dominguez Cornejo
-This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for
-disabled students at the LSE
+* Author: Felipe Dominguez Cornejo
+* This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for disabled students at the LSE
 
-**********************************************************************************************************************************************/
+***********************************************************************************************************************************************
 
 
 	cd "/Users/felipedominguez/Desktop/Research_Assistant/Inclusion"
