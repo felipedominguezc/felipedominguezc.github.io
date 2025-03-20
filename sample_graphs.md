@@ -17,15 +17,20 @@ Graphs Example
 
 
 
+
 **************************************************************************************************
+
 * SECTION 1: SETUP
+
 **************************************************************************************************
 
     cd "/Users/felipedominguez/Desktop/Research_Assistant/Hurricanes & music "
     use "2024-05-23 - revised dataset2.dta", clear
 
 **************************************************************************************************
+
 * SECTION 2: VARIABLE RENAMING
+
 **************************************************************************************************
 
     rename prisk PerceivedRisk
@@ -33,7 +38,9 @@ Graphs Example
     rename trust Trust
 
 **************************************************************************************************
+
 *SECTION 3:PSYCHOLOGICAL OUTCOMES GRAPHS
+
 **************************************************************************************************
 
 *Mean bar graphs of Perceived Risk, Efficacy, Trust by treatment condition
@@ -47,8 +54,11 @@ Graphs Example
     }
     graph combine psgraph1 psgraph2 psgraph3, name(ps_all, replace)
 
+
 **************************************************************************************************
+
 * SECTION 4: EMOTION FREQUENCY GRAPHS
+
 **************************************************************************************************
 
 *Bar graphs of summed emotion indicators by treatment condition
@@ -63,7 +73,9 @@ Graphs Example
     graph combine emotion1 emotion2 emotion3, name(emotions_all, replace)
 
 **************************************************************************************************
+
 * SECTION 5: BEHAVIORAL OUTCOMES GRAPHS
+
 **************************************************************************************************
 
 *Convert proportions to percentages
