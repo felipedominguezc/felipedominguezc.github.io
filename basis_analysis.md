@@ -2,13 +2,13 @@ Administrative Data
 
 ```stata
 
-/***************************************************************************************************************
+/*********************************************************************************************************************************************
 
 Author: Felipe Dominguez Cornejo
 This is part of the preliminary quantitative analysis I conducted for a project focused on improving support for
 disabled students at the LSE
 
-*****************************************************************************************************************/
+**********************************************************************************************************************************************/
 
 
 	cd "/Users/felipedominguez/Desktop/Research_Assistant/Inclusion"
@@ -18,18 +18,18 @@ disabled students at the LSE
 	gen id = _n  // Temporary ID to maintain original order
 	order id
 
-/* Declared_date variable */
+*Declared_date variable
 
 	rename startdate declared_date
 	label var declared_date "Declaration Date"
 	drop enddate
 
 
-/* Drop duplicates based on all relevant columns */
+*Drop duplicates based on all relevant columns
 
 	duplicates drop studentid declared_date disabilitycode, force
 
-/* Variable for whether or not they declared a disability */
+*Variable for whether or not they declared a disability
 
 	gen declared_dis = .
 	replace declared_dis = 0 if disabilitycode == "A"
@@ -42,14 +42,14 @@ disabled students at the LSE
 	label var declared_dis "Declared Disability"
 
 
-/* Sequence variable */
+*Sequence variable
 
 	bysort studentid (declared_date id): gen studentid_number = _n
 	// This variable numbers the entries made by each studentid based on the declared_date and number of disabilities they declared
 
 	label variable studentid_number "Studentid Identifier"
 
-/* Last Declaration Variable */
+*Last Declaration Variable
 
 	egen max_studentid_number = max(studentid_number), by(studentid)
 	gen last_declaration = (studentid_number == max_studentid_number)
@@ -57,7 +57,7 @@ disabled students at the LSE
 		
 	label variable last_declaration "Last Declaration" //dummy//	
 	
-/* Declaration type variable */
+*Declaration type variable
 
 	gen declaration_type = . 
 	replace declaration_type = 0 if studentid_number == last_declaration
@@ -69,7 +69,7 @@ disabled students at the LSE
 	label values declaration_type declaration_type
 	label var declaration_type "Declaration Type"
 
-/* Sort the data by studentid, declared_date, and id */
+*Sort the data by studentid, declared_date, and id
 
 	bysort studentid (declared_date id): gen obs_count = _N
 	label variable obs_count "# Obs Per Student"
