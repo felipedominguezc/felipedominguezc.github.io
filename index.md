@@ -39,5 +39,5 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
 - **[Read the Full Piece (PDF)](op-ed_writing sample.pdf)**
 
 ## Profesional Information
-- **[Check my CV - English (PDF)](dominguez_felipe_cv)**
-- **[Check my CV - Spanish (PDF)](dominguez_felipe_cv_español)**
+- **[Check my CV - English (PDF)](dominguez_felipe_cv.pdf)**
+- **[Check my CV - Spanish (PDF)](dominguez_felipe_cv_español.pdf)**
