@@ -40,4 +40,4 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
 
 ## Profesional Information
 - **[Check my CV - English (PDF)](dominguez_felipe_cv.pdf)**
-- **[Check my CV - Spanish (PDF)](dominguez_felipe_cv_español.pdf)**
+- **[Check my CV - Spanish (PDF)](dominguez_felipe_cv_español.pdf)**
