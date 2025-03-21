@@ -34,3 +34,7 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
 
 ## My Opinion Piece on the IMF in Argentina
 - **[Read the Full Piece (PDF)](op-ed_writing sample.pdf)**
+
+## Profesional Information
+- **[Check my CV - English](dominguez_felipe_cv)**
+- **[Check my CV - Spanish](dominguez_felipe_cv_español)**
