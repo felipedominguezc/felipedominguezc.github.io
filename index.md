@@ -14,7 +14,7 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
 - **Paper: *Forthcoming***
 
 ### Inclusion for Disabled Students at LSE
-- **[Basic: Preliminary Data Analysis](basis_analysis.html)**
+- **[Basic: Preliminary Data Analysis](basis_analysis.html)**  
   *Stata script for preliminary analysis of administrative data on disabled students, focusing on changes in declaration status, time intervals, and descriptive trends.*
 
 ### Working with Different Types of Data
