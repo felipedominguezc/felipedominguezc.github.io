@@ -320,7 +320,7 @@ This .do file meticulously processes raw data from the Hurricanes & Music study.
 	sum intention
 ```
 
-********** End of File **********
+
 ---
 
 **Insights:**  
