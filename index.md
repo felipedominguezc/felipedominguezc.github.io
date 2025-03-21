@@ -16,6 +16,7 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
 ### Inclusion for Disabled Students at LSE
 - **[Basic: Preliminary Data Analysis](basis_analysis.html)**  
   *Stata script for preliminary analysis of administrative data on disabled students, focusing on changes in declaration status, time intervals, and descriptive trends.*
+- **[See what my manager had to say](Reference_Letter_Felipe_Dominguez-Cornejo.pdf)**  
 
 ### Working with Different Types of Data
 - **[Advanced: CPS Data with p-Weight Aggregation for LFPR Analysis](CPS_data.html)**  
