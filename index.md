@@ -1,6 +1,6 @@
 # felipedominguezc.github.io
 
-Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do files that illustrate my evolving coding skills—from basic data visualization to advanced data management and analysis. Some projects demonstrate more advanced techniques than others, reflecting my growth over time. Please note that any errors are my own, and some information has been removed for confidentiality.
+Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do files that illustrate my evolving coding skills—from basic data handling to advanced data management and analysis. Some projects demonstrate more advanced techniques than others, reflecting my growth over time. Please note that any errors are my own, and some information has been removed for confidentiality.
 
 ## My Stata Experience
 
