@@ -33,7 +33,9 @@ Welcome to my portfolio of Stata projects. Below you’ll find extracts from .do
   *Stata script for cleaning, constructing, and analyzing household survey microdata to assess the impact of maternal marital status and household resources on child chronic malnutrition.*
 - **[Read the Full Paper (PDF)](Econometric research sample.pdf)**  
 
-## My Opinion Piece on the IMF in Argentina
+## Opinion Pieces and Writing Samples
+
+### IMF in Argentina – December 2024
 
 *Can the IMF Overcome Argentina's Geopolitical Climate to Foster Sustainable Growth? Exploring the International Monetary Fund’s Role in Argentina’s Struggle for Stability and Growth*
 - **[Read the Full Piece (PDF)](op-ed_writing sample.pdf)**
